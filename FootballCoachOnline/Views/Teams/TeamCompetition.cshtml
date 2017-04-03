@@ -1,0 +1,51 @@
+@model FootballCoachOnline.ViewModels.TeamCompetitionViewModel
+
+@{
+    ViewData["Title"] = "Natjecanja";
+}
+
+<div class="panel-body">
+    @if (TempData[Constants.Message] != null)
+    {
+        bool error = false;
+        var obj = TempData[Constants.ErrorOccurred];
+        if (obj != null)
+        {
+            error = (bool)obj;
+        }
+        <div class="alert @(error ? "alert-danger" : "alert-success")">@TempData[Constants.Message]</div>
+    }
+</div>
+
+<h2>Natjecanja</h2>
+<h4>@Model.Team.Name</h4>
+
+<p>
+    <a asp-action="Join" asp-route-id="@Model.Team.Id">Pridruži se natjecanju</a>
+</p>
+
+<form asp-controller="Teams" asp-action="Leave" method="post">
+    <input type="hidden" value="@Model.Team.Id" name="teamId"/>
+    <table class="table table-striped table" style="width:1%">
+        <tbody>
+            @foreach (var item in Model.Competitions)
+            {
+                <tr>
+                    <td style="white-space:nowrap">
+                        <a asp-controller="Competitions" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-danger btn-xs" title="Obriši"><span class="glyphicon glyphicon-remove"></span></button>
+                    </td>
+                    <td>
+                        <input type="hidden" value="@item.Id" name="competitionId" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
+
+@section Scripts {
+
+}

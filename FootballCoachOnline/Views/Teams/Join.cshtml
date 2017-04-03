@@ -1,0 +1,29 @@
+@model FootballCoachOnline.ViewModels.CompetitionViewModel
+
+@{
+    ViewData["Title"] = "Pridruživanje natjecanju";
+}
+
+<h2>Pridruživanje natjecanju</h2>
+
+<form asp-action="Join">
+    <div class="form-horizontal">
+        <hr />
+        <h4>@Html.DisplayFor(model => model.Team.Name) - @Html.DisplayFor(model => model.Team.Age)</h4>
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.Team.Id" />
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Natjecanja</label>
+            <div class="col-md-10">
+                <select asp-for="CompetitionId" class="form-control" asp-items="Model.CompetitionSL"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Dodaj" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+

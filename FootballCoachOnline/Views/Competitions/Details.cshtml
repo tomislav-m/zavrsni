@@ -1,0 +1,104 @@
+@model List<FootballCoachOnline.Models.CompetitionTeamStats>
+
+@{
+    ViewData["Title"] = ViewData["CompetitionName"];
+    int i = 1;
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/dizajn.css" />
+</head>
+
+<h2>@ViewData["CompetitionName"]</h2>
+
+<table id="myTable" class="table tablesorter">
+    <thead>
+        <tr>
+            <th class="text-center"><a href="#">#</a></th>
+            <th id="nameHeader" class="text-center"><a href="#">Tim</a></th>
+            <th class="text-center" title="Odigrano"><a href="#">O</a></th>
+            <th class="text-center" title="Pobjede"><a href="#">P</a></th>
+            <th class="text-center" title="Neriješene"><a href="#">N</a></th>
+            <th class="text-center" title="Izgubljene"><a href="#">I</a></th>
+            <th class="text-center" title="Zabijeni golovi"><a href="#">GZ</a></th>
+            <th class="text-center" title="Primljeni golovi"><a href="#">GP</a></th>
+            <th class="text-center" title="Bodovi"><a href="#">B</a></th>
+        </tr>
+    </thead>
+    <tbody class="text-center">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@i</td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.GamesPlayed
+                </td>
+                <td>
+                    @item.Wins
+                </td>
+                <td>
+                    @item.Draws
+                </td>
+                <td>
+                    @item.Losses
+                </td>
+                <td>
+                    @item.GoalsScored
+                </td>
+                <td>
+                    @item.GoalsConceded
+                </td>
+                <td>
+                    @item.Points
+                </td>
+            </tr>
+            ++i;
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="Index">Natrag na listu</a>
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            // add new widget called indexFirstColumn
+            $.tablesorter.addWidget({
+                // give the widget a id
+                id: "indexFirstColumn",
+                // format is called when the on init and when a sorting has finished
+                format: function (table) {
+                    // loop all tr elements and set the value for the first column  
+                    $(table).find("tr td:first-child").each(function (index) {
+                        $(this).text(index + 1);
+                    })
+                }
+            });
+
+            $("#myTable").tablesorter({
+                widgets: ['zebra', 'indexFirstColumn']
+            });
+        });
+    </script>
+
+    @*<script>
+        $('th').click(function () {
+            var table = $(this).parents('table').eq(0)
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+            this.asc = !this.asc
+            if (!this.asc) { rows = rows.reverse() }
+            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) } 
+        })
+        function comparer(index) {
+            return function (a, b) {
+                var valA = getCellValue(a, index), valB = getCellValue(b, index)
+                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
+            }
+        }
+        function getCellValue(row, index) { return $(row).children('td').eq(index).html() }
+    </script>*@
+}

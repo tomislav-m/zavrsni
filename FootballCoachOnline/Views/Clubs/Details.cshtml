@@ -1,0 +1,35 @@
+@model FootballCoachOnline.Models.Club
+
+@{
+    ViewData["Title"] = "O klubu";
+}
+
+<h2>O klubu</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nickname)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nickname)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.YearFounded)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.YearFounded)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Uredi</a> |
+    <a asp-action="Index">Natrag na listu</a>
+</div>

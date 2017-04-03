@@ -1,0 +1,28 @@
+@model FootballCoachOnline.Models.Competition
+
+@{
+    ViewData["Title"] = "Brisanje";
+}
+
+<h2>Brisanje</h2>
+
+<h3>Jeste li sigurni da želite obrisati natjecanje?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="Id" />
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Obriši" class="btn btn-default" /> |
+            <a asp-action="Index">Natrag na listu</a>
+        </div>
+    </form>
+</div>
