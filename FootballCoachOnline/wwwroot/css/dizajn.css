@@ -1,0 +1,11 @@
+﻿th a {
+    color: black;
+}
+
+th a:hover {
+    color:black;
+}
+
+table {
+    width: 50%;
+}
