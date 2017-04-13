@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FootballCoachOnline.Models;
 using Microsoft.AspNetCore.Authorization;
+using FootballCoachOnline.Data;
 
 namespace FootballCoachOnline.Controllers
 {
     public class ClubsController : Controller
     {
-        private readonly ZavrsniDBContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public ClubsController(ZavrsniDBContext context)
+        public ClubsController(ApplicationDbContext context)
         {
             _context = context;    
         }

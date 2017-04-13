@@ -7,14 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FootballCoachOnline.Models;
 using Microsoft.AspNetCore.Authorization;
+using FootballCoachOnline.Data;
+using FootballCoachOnline.ViewModels;
 
 namespace FootballCoachOnline.Controllers
 {
     public class CompetitionsController : Controller
     {
-        private readonly ZavrsniDBContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CompetitionsController(ZavrsniDBContext context)
+        public CompetitionsController(ApplicationDbContext context)
         {
             _context = context;    
         }
@@ -44,11 +46,11 @@ namespace FootballCoachOnline.Controllers
 
             var stats = _context.TeamStats.Where(ts => ts.CompetitionId == id).ToList();
 
-            List<CompetitionTeamStats> cts = new List<CompetitionTeamStats>();
+            List<CompetitionTeamStatsViewModel> cts = new List<CompetitionTeamStatsViewModel>();
 
             foreach(var item in stats)
             {
-                cts.Add(new CompetitionTeamStats {
+                cts.Add(new CompetitionTeamStatsViewModel {
                     Draws = item.Draws,
                     GamesPlayed = item.GamesPlayed,
                     GoalsConceded = item.GoalsConceded,

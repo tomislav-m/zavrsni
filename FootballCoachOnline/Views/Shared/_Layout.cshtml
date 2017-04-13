@@ -32,10 +32,11 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Početna</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Clubs" asp-action="Index">Klubovi</a></li>
                     <li><a asp-area="" asp-controller="Competitions" asp-action="Index">Natjecanja</a></li>
                 </ul>
+                @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </nav>
@@ -49,7 +50,7 @@
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script type="text/javascript" src="~/lib/tablesorter/js/jquery.tablesorter.min.js"></script>
+        <script type="text/javascript" src="~/lib/tablesorter/jquery.tablesorter.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>

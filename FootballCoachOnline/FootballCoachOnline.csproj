@@ -8,33 +8,46 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="wwwroot\css\dizajn.css" />
-    <Content Include="wwwroot\lib\tablesorter\jquery.tablesorter.js" />
-    <Content Include="wwwroot\lib\tablesorter\jquery.tablesorter.min.js" />
-    <Content Include="wwwroot\lib\tablesorter\jquery.tablesorter.widgets-filter-formatter-select2.js" />
-    <Content Include="wwwroot\lib\tablesorter\jquery.tablesorter.widgets-filter-formatter.js" />
-    <Content Include="wwwroot\lib\tablesorter\jquery.tablesorter.widgets-filter-formatter.min.js" />
-    <Content Include="wwwroot\lib\tablesorter\jquery.tablesorter.widgets.js" />
-    <Content Include="wwwroot\lib\tablesorter\jquery.tablesorter.widgets.min.js" />
-  </ItemGroup>
+  <PropertyGroup>
+    <UserSecretsId>aspnet-FootballCoachOnline-8be41684-e744-404d-a7be-462047656e33</UserSecretsId>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\tablesorter\addons\pager\icons\" />
+    <Folder Include="wwwroot\lib\tablesorter\beta-testing\" />
+    <Folder Include="wwwroot\lib\tablesorter\css\images\" />
+    <Folder Include="wwwroot\lib\tablesorter\css\psd\" />
+    <Folder Include="wwwroot\lib\tablesorter\docs\assets\" />
+    <Folder Include="wwwroot\lib\tablesorter\docs\css\images\" />
+    <Folder Include="wwwroot\lib\tablesorter\docs\fonts\" />
+    <Folder Include="wwwroot\lib\tablesorter\docs\img\" />
+    <Folder Include="wwwroot\lib\tablesorter\docs\js\chili\" />
+    <Folder Include="wwwroot\lib\tablesorter\js\extras\" />
+    <Folder Include="wwwroot\lib\tablesorter\js\parsers\" />
+    <Folder Include="wwwroot\lib\tablesorter\js\widgets\" />
+    <Folder Include="wwwroot\lib\tablesorter\testing\" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace FootballCoachOnline.Models
 {
     public partial class Team
@@ -18,7 +19,7 @@ namespace FootballCoachOnline.Models
         }
 
         public int Id { get; set; }
-        public int? CoachId { get; set; }
+        public string CoachId { get; set; }
         public int ClubId { get; set; }
 
         [Display(Name = "Ime")]
@@ -39,8 +40,5 @@ namespace FootballCoachOnline.Models
 
         [Display(Name = "Klub")]
         public virtual Club Club { get; set; }
-
-        [Display(Name = "Trener")]
-        public virtual User Coach { get; set; }
     }
 }

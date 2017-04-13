@@ -1,5 +1,10 @@
 @model IEnumerable<FootballCoachOnline.Models.Team>
 
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 @{
     ViewData["Title"] = "Timovi";
 }
@@ -7,7 +12,10 @@
 <h2>Timovi</h2>
 
 <p>
-    <a asp-action="Create">Dodaj tim</a>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <a asp-action="Create">Dodaj tim</a>
+    }
 </p>
 <table class="table">
     <thead>
@@ -20,9 +28,6 @@
                 </th>
             <th>
                 @Html.DisplayNameFor(model => model.Club)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Coach)
             </th>
             <th></th>
         </tr>
@@ -41,15 +46,15 @@
                     @Html.DisplayFor(modelItem => item.Club.Name)
                 </a>
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Coach.Mail)
-            </td>
+        @if (SignInManager.IsSignedIn(User) && UserManager.GetUserId(User) == item.CoachId)
+        {
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Uredi</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Detalji</a> |
                 <a asp-action="TeamCompetition" asp-route-id="@item.Id">Vidi natjecanja</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Obriši</a>
             </td>
+        }
         </tr>
 }
     </tbody>
