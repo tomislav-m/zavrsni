@@ -1,0 +1,72 @@
+@model FootballCoachOnline.Models.Player
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Player</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TeamId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Surname)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Surname)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlaceOfBirth)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlaceOfBirth)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nationality)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nationality)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NaturalPosition)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NaturalPosition)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Physical)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Physical)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Role)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Role)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.TeamId">Back to List</a>
+</div>

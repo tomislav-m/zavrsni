@@ -1,35 +1,66 @@
-@model FootballCoachOnline.Models.Team
+@model IEnumerable<FootballCoachOnline.Models.Player>
 
 @{
-    ViewData["Title"] = "Detalji";
+    ViewData["Title"] = "Index";
 }
 
-<h2>Detalji</h2>
+<h2>Index</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Age)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Age)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Club)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Club.Name)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Uredi tim</a> |
-    <a asp-action="Index">Natrag</a>
-</div>
+<p>
+    <a asp-controller="Players" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th style="text-align:center">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th style="text-align:center">
+                @Html.DisplayNameFor(model => model.DateOfBirth)
+            </th>
+            <th style="text-align:center">
+                @Html.DisplayNameFor(model => model.PlaceOfBirth)
+            </th>
+            <th style="text-align:center">
+                @Html.DisplayNameFor(model => model.Nationality)
+            </th>
+            <th style="text-align:center">
+                @Html.DisplayNameFor(model => model.NaturalPosition)
+            </th>
+            <th style="text-align:center">
+                @Html.DisplayNameFor(model => model.Physical)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody style="text-align: center">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name) @Html.DisplayFor(modelItem => item.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PlaceOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nationality)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NaturalPosition)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Physical)
+                </td>
+                <td>
+                    <a asp-controller="Players" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="Players" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-controller="Players" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -13,9 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\css\banner1.svg">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
+    <Content Include="wwwroot\images\football.jpg" />
+    <Content Include="wwwroot\images\football2.jpg" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />

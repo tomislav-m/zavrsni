@@ -42,9 +42,7 @@ namespace FootballCoachOnline.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Team
-                .Include(t => t.Club)
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var team = await _context.Team.SingleOrDefaultAsync(m => m.Id == id);
 
             if (team == null)
             {
@@ -55,14 +53,18 @@ namespace FootballCoachOnline.Controllers
             {
                 return RedirectToAction("AccessDenied", "Account", new { area = "" });
             }
+            
+            var players = _context.PlayerTeam.Where(t => t.TeamId == id).Select(p => p.Player);
+            ViewData["TeamId"] = id;
 
-            return View(team);
+            return View(players);
         }
 
         // GET: Teams/Create
         public IActionResult Create()
         {
             ViewData["ClubId"] = new SelectList(_context.Club, "Id", "Name");
+            ViewData["CoachId"] = new SelectList(userManager.Users, "Id", "UserName");
             return View();
         }
 
@@ -116,6 +118,7 @@ namespace FootballCoachOnline.Controllers
             }
 
             ViewData["ClubId"] = new SelectList(_context.Club, "Id", "Name", team.ClubId);
+            ViewData["CoachId"] = new SelectList(userManager.Users, "Id", "UserName");
             return View(team);
         }
 
@@ -152,6 +155,7 @@ namespace FootballCoachOnline.Controllers
                 return RedirectToAction("Index");
             }
             ViewData["ClubId"] = new SelectList(_context.Club, "Id", "Name", team.ClubId);
+            ViewData["CoachId"] = new SelectList(userManager.Users, "Id", "UserName");
             return View(team);
         }
 

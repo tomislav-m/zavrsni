@@ -1,0 +1,93 @@
+@model FootballCoachOnline.Models.Player
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>Player</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label asp-for="TeamId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="TeamId" class="form-control" />
+                <span asp-validation-for="TeamId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Surname" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Surname" class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="DateOfBirth" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlaceOfBirth" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlaceOfBirth" class="form-control" />
+                <span asp-validation-for="PlaceOfBirth" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Nationality" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Nationality" class="form-control" />
+                <span asp-validation-for="Nationality" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="NaturalPosition" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="NaturalPosition" class="form-control" />
+                <span asp-validation-for="NaturalPosition" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="Physical" />
+                    <label asp-for="Physical"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Role" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Role" class="form-control" />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.TeamId">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

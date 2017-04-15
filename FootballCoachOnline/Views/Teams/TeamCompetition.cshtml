@@ -35,7 +35,7 @@
                         <a asp-controller="Competitions" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>
                     </td>
                     <td>
-                        <button type="submit" class="btn btn-danger btn-xs" title="Obriši"><span class="glyphicon glyphicon-remove"></span></button>
+                        <button type="submit" class="btn btn-danger btn-xs del" title="Obriši"><span class="glyphicon glyphicon-remove"></span></button>
                     </td>
                     <td>
                         <input type="hidden" value="@item.Id" name="competitionId" />
@@ -47,5 +47,13 @@
 </form>
 
 @section Scripts {
-
+<script>
+    $(document).ready(function () {
+        $(".del").click(function () {
+            if (!confirm("Jeste li sigurni?")) {
+                return false;
+            }
+        });
+    });
+</script>
 }
