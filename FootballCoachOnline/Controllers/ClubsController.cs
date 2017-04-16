@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FootballCoachOnline.Models;
 using Microsoft.AspNetCore.Authorization;
 using FootballCoachOnline.Data;
+using System.Data.SqlClient;
 
 namespace FootballCoachOnline.Controllers
 {
@@ -73,7 +74,7 @@ namespace FootballCoachOnline.Controllers
                 {
                     ModelState.AddModelError(string.Empty, exc.ToString());
                     TempData[Constants.Message] = "Pogreška u dodavanju kluba";
-                    TempData[Constants.ErrorOccurred] = false;
+                    TempData[Constants.ErrorOccurred] = true;
                 }
             }
             return View(club);
@@ -154,9 +155,22 @@ namespace FootballCoachOnline.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var club = await _context.Club.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Club.Remove(club);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                _context.Club.Remove(club);
+                await _context.SaveChangesAsync();
+
+                TempData[Constants.Message] = $"Klub {club.Name} uspješno obrisan.";
+                TempData[Constants.ErrorOccurred] = false;
+            }
+            catch (DbUpdateException exc)
+            {
+                ModelState.AddModelError(string.Empty, exc.ToString());
+                TempData[Constants.Message] = $"Klub {club.Name} ne može biti obrisan jer ima timove!";
+                TempData[Constants.ErrorOccurred] = true;
+            }
+
+            return RedirectToAction("Index", "Clubs", "");
         }
 
         private bool ClubExists(int id)

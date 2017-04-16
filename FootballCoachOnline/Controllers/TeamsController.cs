@@ -54,7 +54,7 @@ namespace FootballCoachOnline.Controllers
                 return RedirectToAction("AccessDenied", "Account", new { area = "" });
             }
             
-            var players = _context.PlayerTeam.Where(t => t.TeamId == id).Select(p => p.Player);
+            var players = _context.PlayerTeam.Where(t => t.TeamId == id).Select(p => p.Player).OrderBy(p => p.Surname).ToList();
             ViewData["Team"] = team.Name;
 
             return View(players);

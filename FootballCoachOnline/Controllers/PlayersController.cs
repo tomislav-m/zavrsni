@@ -64,17 +64,26 @@ namespace FootballCoachOnline.Controllers
         {
             if (ModelState.IsValid)
             {
+                var team = _context.Team.SingleOrDefault(t => t.Id == player.TeamId);
                 _context.Add(player);
                 PlayerTeam pt = new PlayerTeam
                 {
                     Player = player,
                     PlayerId = player.Id,
-                    Team = _context.Team.SingleOrDefault(t => t.Id == player.TeamId),
+                    Team = team,
                     TeamId = player.TeamId
                 };
                 _context.Add(pt);
+                _context.Add(new PlayerStats
+                {
+                    Team = team,
+                    TeamId = player.TeamId,
+                    Player = player,
+                    PlayerId = player.Id,
+                    Year = DateTime.Now
+                });
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Teams", new { id = team.Id });
             }
             return View(player);
         }
@@ -92,6 +101,9 @@ namespace FootballCoachOnline.Controllers
             {
                 return NotFound();
             }
+            var teams = _context.Team.Where(t => t.CoachId == userManager.GetUserId(User));
+            ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+
             return View(player);
         }
 
@@ -156,7 +168,7 @@ namespace FootballCoachOnline.Controllers
             var player = await _context.Player.SingleOrDefaultAsync(m => m.Id == id);
             _context.Player.Remove(player);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Teams", new { id = player.TeamId });
         }
 
         private bool PlayerExists(int id)

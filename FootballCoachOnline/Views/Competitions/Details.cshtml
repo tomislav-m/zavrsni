@@ -11,11 +11,11 @@
 
 <h2>@ViewData["CompetitionName"]</h2>
 
-<table id="myTable" class="table tablesorter">
+<table id="myTable" class="table table-striped tablesorter">
     <thead>
         <tr>
             <th class="text-center"><a href="#">#</a></th>
-            <th id="nameHeader" class="text-center"><a href="#">Tim</a></th>
+            <th class="text-center"><a href="#">Tim</a></th>
             <th class="text-center" title="Odigrano"><a href="#">O</a></th>
             <th class="text-center" title="Pobjede"><a href="#">P</a></th>
             <th class="text-center" title="Neriješene"><a href="#">N</a></th>
@@ -30,32 +30,34 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@i</td>
-                <td>
+                <td style="padding: 5px">
+                    @i
+                </td>
+                <td style="padding: 5px">
                     @item.Name
                 </td>
-                <td>
+                <td style="padding: 5px">
                     @item.GamesPlayed
                 </td>
-                <td>
+                <td style="padding: 5px">
                     @item.Wins
                 </td>
-                <td>
+                <td style="padding: 5px">
                     @item.Draws
                 </td>
-                <td>
+                <td style="padding: 5px">
                     @item.Losses
                 </td>
-                <td>
+                <td style="padding: 5px">
                     @item.GoalsScored
                 </td>
-                <td>
+                <td style="padding: 5px">
                     @item.GoalsConceded
                 </td>
-                <td>
+                <td style="padding: 5px">
                     @(@item.GoalsScored-@item.GoalsConceded)
                 </td>
-                <td>
+                <td style="padding: 5px">
                     @item.Points
                 </td>
             </tr>
