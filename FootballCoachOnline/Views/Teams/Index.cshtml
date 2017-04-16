@@ -17,7 +17,7 @@
         <a asp-action="Create">Dodaj tim</a>
     }
 </p>
-<table class="table">
+<table id="myTable" class="table tablesorter">
     <thead>
         <tr>
                 <th>
@@ -46,7 +46,7 @@
                     @Html.DisplayFor(modelItem => item.Club.Name)
                 </a>
             </td>
-        @if (SignInManager.IsSignedIn(User) && UserManager.GetUserId(User) == item.CoachId)
+        @if (SignInManager.IsSignedIn(User) && (UserManager.GetUserId(User) == item.CoachId || await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrator")))
         {
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Uredi</a> |
@@ -64,3 +64,11 @@
 }
     </tbody>
 </table>
+
+@section scripts {
+    <script>
+        $(function () {
+            $("#myTable").tablesorter({});
+        });
+    </script>
+}

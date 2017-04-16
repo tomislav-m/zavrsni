@@ -23,7 +23,7 @@ namespace FootballCoachOnline.Controllers
         // GET: Clubs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Club.ToListAsync());
+            return View(await _context.Club.OrderBy(c => c.Name).ToListAsync());
         }
 
         // GET: Clubs/Details/5

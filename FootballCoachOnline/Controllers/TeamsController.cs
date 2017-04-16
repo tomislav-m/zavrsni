@@ -29,9 +29,9 @@ namespace FootballCoachOnline.Controllers
         {
             if (id != 0)
             {
-                return View(await _context.Team.Where(t => t.ClubId == id).Include(t => t.Club).ToListAsync());
+                return View(await _context.Team.Where(t => t.ClubId == id).Include(t => t.Club).OrderBy(t => t.Name).ToListAsync());
             }
-            return View(await _context.Team.Include(t => t.Club).ToListAsync());
+            return View(await _context.Team.Include(t => t.Club).OrderBy(t => t.Name).ToListAsync());
         }
 
         // GET: Teams/Details/5
@@ -49,13 +49,13 @@ namespace FootballCoachOnline.Controllers
                 return NotFound();
             }
 
-            if (team.CoachId != userManager.GetUserId(User))
+            if (!(await authorize(team)))
             {
                 return RedirectToAction("AccessDenied", "Account", new { area = "" });
             }
             
             var players = _context.PlayerTeam.Where(t => t.TeamId == id).Select(p => p.Player);
-            ViewData["TeamId"] = id;
+            ViewData["Team"] = team.Name;
 
             return View(players);
         }
@@ -63,7 +63,7 @@ namespace FootballCoachOnline.Controllers
         // GET: Teams/Create
         public IActionResult Create()
         {
-            ViewData["ClubId"] = new SelectList(_context.Club, "Id", "Name");
+            ViewData["ClubId"] = new SelectList(_context.Club.OrderBy(t => t.Name), "Id", "Name");
             ViewData["CoachId"] = new SelectList(userManager.Users, "Id", "UserName");
             return View();
         }
@@ -112,7 +112,7 @@ namespace FootballCoachOnline.Controllers
                 return NotFound();
             }
 
-            if (team.CoachId != userManager.GetUserId(User))
+            if (!(await authorize(team)))
             {
                 return RedirectToAction("AccessDenied", "Account", new { area = "" });
             }
@@ -175,7 +175,7 @@ namespace FootballCoachOnline.Controllers
                 return NotFound();
             }
 
-            if (team.CoachId != userManager.GetUserId(User))
+            if (!(await authorize(team)))
             {
                 return RedirectToAction("AccessDenied", "Account", new { area = "" });
             }
@@ -211,26 +211,26 @@ namespace FootballCoachOnline.Controllers
                 return NotFound();
             }
 
-            if (team.CoachId != userManager.GetUserId(User))
+            if (await authorize(team))
             {
-                return RedirectToAction("AccessDenied", "Account", new { area = "" });
+                var comp = from tc in _context.TeamCompetition
+                           join c in _context.Competition on tc.CompetitionId equals c.Id
+                           where tc.TeamId == id
+                           select c;
+
+                var competitions = _context.Competition.Except(comp);
+
+
+                var competitionVM = new CompetitionViewModel
+                {
+                    CompetitionSL = new SelectList(competitions, "Id", "Name"),
+                    Team = team
+                };
+
+                return View(competitionVM);
             }
 
-            var comp = from tc in _context.TeamCompetition
-                       join c in _context.Competition on tc.CompetitionId equals c.Id
-                       where tc.TeamId == id
-                       select c;
-
-            var competitions = _context.Competition.Except(comp);
-
-
-            var competitionVM = new CompetitionViewModel
-            {
-                CompetitionSL = new SelectList(competitions, "Id", "Name"),
-                Team = team
-            };
-
-            return View(competitionVM);
+            return RedirectToAction("AccessDenied", "Account", new { area = "" });
         }
 
         // POST: Teams/Join/5
@@ -288,23 +288,23 @@ namespace FootballCoachOnline.Controllers
                 return NotFound();
             }
 
-            if (team.CoachId != userManager.GetUserId(User))
+            if (await authorize(team))
             {
-                return RedirectToAction("AccessDenied", "Account", new { area = "" });
+
+                var competitions = from tc in _context.TeamCompetition
+                                   join c in _context.Competition on tc.CompetitionId equals c.Id
+                                   where tc.TeamId == id
+                                   select c;
+
+                var VM = new TeamCompetitionViewModel
+                {
+                    Competitions = competitions,
+                    Team = team
+                };
+
+                return View(VM);
             }
-
-            var competitions = from tc in _context.TeamCompetition
-                               join c in _context.Competition on tc.CompetitionId equals c.Id
-                               where tc.TeamId == id
-                               select c;
-
-            var VM = new TeamCompetitionViewModel
-            {
-                Competitions = competitions,
-                Team = team
-            };
-
-            return View(VM);
+            return RedirectToAction("AccessDenied", "Account", new { area = "" });
         }
 
         // POST
@@ -341,6 +341,13 @@ namespace FootballCoachOnline.Controllers
         private bool TeamExists(int id)
         {
             return _context.Team.Any(e => e.Id == id);
+        }
+
+        public async Task<bool> authorize(Team team)
+        {
+            return (team.CoachId != null &&
+                    (team.CoachId == userManager.GetUserId(User) || 
+                    await userManager.IsInRoleAsync(await userManager.GetUserAsync(User), "Administrator")));
         }
     }
 }

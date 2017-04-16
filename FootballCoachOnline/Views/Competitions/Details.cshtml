@@ -22,6 +22,7 @@
             <th class="text-center" title="Izgubljene"><a href="#">I</a></th>
             <th class="text-center" title="Zabijeni golovi"><a href="#">GZ</a></th>
             <th class="text-center" title="Primljeni golovi"><a href="#">GP</a></th>
+            <th class="text-center" title="Gol Razlika"><a href="#">GR</a></th>
             <th class="text-center" title="Bodovi"><a href="#">B</a></th>
         </tr>
     </thead>
@@ -52,6 +53,9 @@
                     @item.GoalsConceded
                 </td>
                 <td>
+                    @(@item.GoalsScored-@item.GoalsConceded)
+                </td>
+                <td>
                     @item.Points
                 </td>
             </tr>
@@ -80,25 +84,9 @@
             });
 
             $("#myTable").tablesorter({
-                widgets: ['zebra', 'indexFirstColumn']
+                widgets: ['zebra', 'indexFirstColumn'],
+                sortList: [[9, 0], [8, 0], [1, 0]]
             });
         });
     </script>
-
-    @*<script>
-        $('th').click(function () {
-            var table = $(this).parents('table').eq(0)
-            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
-            this.asc = !this.asc
-            if (!this.asc) { rows = rows.reverse() }
-            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) } 
-        })
-        function comparer(index) {
-            return function (a, b) {
-                var valA = getCellValue(a, index), valB = getCellValue(b, index)
-                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
-            }
-        }
-        function getCellValue(row, index) { return $(row).children('td').eq(index).html() }
-    </script>*@
 }

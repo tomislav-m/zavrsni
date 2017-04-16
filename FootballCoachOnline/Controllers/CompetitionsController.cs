@@ -62,9 +62,7 @@ namespace FootballCoachOnline.Controllers
                 });
             }
 
-            cts.OrderBy(t => t.Points);
-
-            return View(cts);
+            return View(cts.OrderBy(t => t.Points).ThenBy(t => t.GoalsScored - t.GoalsConceded).ThenBy(t => t.Name).ToList());
         }
 
         // GET: Competitions/Create
