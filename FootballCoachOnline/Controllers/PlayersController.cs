@@ -52,6 +52,11 @@ namespace FootballCoachOnline.Controllers
             var teams = _context.Team.Where(t => t.CoachId == userManager.GetUserId(User));
 
             ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+
+            var positions = from Player.Position p in Enum.GetValues(typeof(Player.Position))
+                            select new { Id = (int)p, Name = p.ToString() };
+            ViewData["Position"] = new SelectList(positions, "Id", "Name");
+
             return View();
         }
 
@@ -103,6 +108,10 @@ namespace FootballCoachOnline.Controllers
             }
             var teams = _context.Team.Where(t => t.CoachId == userManager.GetUserId(User));
             ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+
+            var positions = from Player.Position p in Enum.GetValues(typeof(Player.Position))
+                            select new { Id = (int)p, Name = p.ToString() };
+            ViewData["Position"] = new SelectList(positions, "Id", "Name");
 
             return View(player);
         }

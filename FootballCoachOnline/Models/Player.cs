@@ -4,8 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FootballCoachOnline.Models
 {
+
     public partial class Player
     {
+        public enum Position { golman, obrambeni, vezni, napadač };
+
         public Player()
         {
             MatchStats = new HashSet<MatchStats>();
@@ -34,7 +37,7 @@ namespace FootballCoachOnline.Models
         public string Nationality { get; set; }
 
         [Display(Name = "Pozicija")]
-        public string NaturalPosition { get; set; }
+        public Position NaturalPosition { get; set; }
 
         [Display(Name = "Obavljen liječnički?")]
         public bool Physical { get; set; }

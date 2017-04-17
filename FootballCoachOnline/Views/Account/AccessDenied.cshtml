@@ -7,15 +7,4 @@
 <header>
     <h1 class="text-danger">Access Denied.</h1>
     <p class="text-danger">You do not have access to this resource.</p>
-    <p>Redirect to homepage in <span class="Timer">3</span>...</p>
 </header>
-
-@section Scripts {
-    <script>
-        var start = new Date;
-
-        setInterval(function () {
-            $('.Timer').text($('.Timer').text() - 1);
-        }, 1000);
-    </script>
-}

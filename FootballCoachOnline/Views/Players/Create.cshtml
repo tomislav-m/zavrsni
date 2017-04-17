@@ -55,7 +55,7 @@
         <div class="form-group">
             <label asp-for="NaturalPosition" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="NaturalPosition" class="form-control" />
+                <select asp-for="NaturalPosition" class="form-control" asp-items="@ViewBag.Position"></select>
                 <span asp-validation-for="NaturalPosition" class="text-danger"></span>
             </div>
         </div>

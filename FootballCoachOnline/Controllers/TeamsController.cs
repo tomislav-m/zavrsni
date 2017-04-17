@@ -54,7 +54,12 @@ namespace FootballCoachOnline.Controllers
                 return RedirectToAction("AccessDenied", "Account", new { area = "" });
             }
             
-            var players = _context.PlayerTeam.Where(t => t.TeamId == id).Select(p => p.Player).OrderBy(p => p.Surname).ToList();
+            var players = _context.PlayerTeam.Where(t => t.TeamId == id)
+                          .Select(p => p.Player)
+                          .OrderBy(p => p.NaturalPosition)
+                          .ThenBy(p => p.Surname)
+                          .ToList();
+
             ViewData["Team"] = team.Name;
 
             return View(players);
@@ -345,9 +350,12 @@ namespace FootballCoachOnline.Controllers
 
         public async Task<bool> authorize(Team team)
         {
-            return (team.CoachId != null &&
-                    (team.CoachId == userManager.GetUserId(User) || 
-                    await userManager.IsInRoleAsync(await userManager.GetUserAsync(User), "Administrator")));
+            if(await userManager.IsInRoleAsync(await userManager.GetUserAsync(User), "Administrator"))
+            {
+                return true;
+            }
+
+            return (team.CoachId != null && (team.CoachId == userManager.GetUserId(User)));
         }
     }
 }
