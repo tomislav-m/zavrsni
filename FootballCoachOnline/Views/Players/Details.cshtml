@@ -4,10 +4,10 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Detalji</h2>
+<div id="tempmessage"></div>
 
 <div>
-    <h4>@Model.Name @Model.Surname</h4>
+    <h3>@Model.Name @Model.Surname</h3>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -56,7 +56,9 @@
             @Html.DisplayNameFor(model => model.Physical)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Physical)
+            <form asp-action="EditPhysical" method="post">
+                <input asp-for="@Model.Physical" data-playerid="@Model.Id" class="editajax" />
+            </form>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Role)
@@ -70,3 +72,11 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.TeamId">Back to List</a>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            SetEditAjax(".editajax", '@Url.Action("EditPhysical")','playerid');
+        });
+    </script>
+}

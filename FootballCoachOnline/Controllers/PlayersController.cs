@@ -150,6 +150,39 @@ namespace FootballCoachOnline.Controllers
             }
             return View(player);
         }
+        
+        public IActionResult EditPhysical(int id)
+        {
+            var player = _context.Player.SingleOrDefault(p => p.Id == id);
+            if(player == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    player.Physical = !player.Physical;
+                    _context.Update(player);
+                    _context.SaveChanges();
+                    var result = new
+                    {
+                        message = $"Igraè {player.Name} {player.Surname} ažuriran.",
+                        success = true
+                    };
+                    return Json(result);
+                }
+                catch (Exception exc)
+                {
+                    var result = new
+                    {
+                        message = $"Pogreška pri ažuriranju: + {exc.InnerException}",
+                        success = false
+                    };
+                    return Json(result);
+                }
+            }
+        }
 
         // GET: Players/Delete/5
         public async Task<IActionResult> Delete(int? id)
