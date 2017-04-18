@@ -1,6 +1,12 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background: url(/images/cream_dust.png) repeat 0 0;
+    font-family: 'Droid Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, th {
+    font-family: 'Droid Serif', serif;
 }
 
 /* Wrapping element */
@@ -51,4 +57,31 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
     .carousel-caption {
         display: none;
     }
+}
+
+.playerlink a {
+    color: inherit;
+    display: block;
+}
+
+.playerlink a:hover {
+    text-decoration: none;
+}
+
+.headcenter > thead > tr > th, .headcenter > tbody > tr > td {
+    text-align: center;
+}
+
+.nav li a {
+    padding-left: 10px;
+    padding-right: 5px;
+    line-height: 15px;
+}
+
+.glyphicon {
+    line-height: 15px;
+}
+
+.smalltable > tbody > tr > td {
+    padding: 5px;
 }

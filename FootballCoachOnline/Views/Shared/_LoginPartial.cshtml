@@ -12,7 +12,7 @@
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a asp-area="" asp-controller="Manage" asp-action="Index" title="Postavke">
-                    <span class="glyphicon glyphicon-user"></span> @UserManager.GetUserName(User)
+                    <span class="flaticon-football-leader-man"></span> @UserManager.GetUserName(User)
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
@@ -33,7 +33,7 @@
                 </ul>
             </li>
             <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link"><span class="glyphicon glyphicon-log-out"></span> Log out</button>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link"><span class="glyphicon glyphicon-log-out"></span> Odjava</button>
             </li>
         </ul>
     </form>
@@ -41,7 +41,7 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="Register"><span class="glyphicon glyphicon-user"></span> Register</a></li>
-        <li><a asp-area="" asp-controller="Account" asp-action="Login"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
+        <li><a asp-area="" asp-controller="Account" asp-action="Register"><span class="glyphicon glyphicon-user"></span> Registriraj se</a></li>
+        <li><a asp-area="" asp-controller="Account" asp-action="Login"><span class="glyphicon glyphicon-log-in"></span> Prijavi se</a></li>
     </ul>
 }

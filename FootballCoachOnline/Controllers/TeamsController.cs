@@ -17,11 +17,13 @@ namespace FootballCoachOnline.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
 
-        public TeamsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public TeamsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         // GET: Teams
@@ -350,6 +352,10 @@ namespace FootballCoachOnline.Controllers
 
         public async Task<bool> authorize(Team team)
         {
+            if (!signInManager.IsSignedIn(User)){
+                return false;
+            }
+
             if(await userManager.IsInRoleAsync(await userManager.GetUserAsync(User), "Administrator"))
             {
                 return true;

@@ -11,53 +11,53 @@
 
 <h2>@ViewData["CompetitionName"]</h2>
 
-<table id="myTable" class="table table-striped tablesorter">
+<table id="myTable" class="table headcenter smalltable tablesorter">
     <thead>
         <tr>
-            <th class="text-center"><a href="#">#</a></th>
-            <th class="text-center"><a href="#">Tim</a></th>
-            <th class="text-center" title="Odigrano"><a href="#">O</a></th>
-            <th class="text-center" title="Pobjede"><a href="#">P</a></th>
-            <th class="text-center" title="Neriješene"><a href="#">N</a></th>
-            <th class="text-center" title="Izgubljene"><a href="#">I</a></th>
-            <th class="text-center" title="Zabijeni golovi"><a href="#">GZ</a></th>
-            <th class="text-center" title="Primljeni golovi"><a href="#">GP</a></th>
-            <th class="text-center" title="Gol Razlika"><a href="#">GR</a></th>
-            <th class="text-center" title="Bodovi"><a href="#">B</a></th>
+            <th><a href="#">#</a></th>
+            <th><a href="#">Tim</a></th>
+            <th title="Odigrano"><a href="#">O</a></th>
+            <th title="Pobjede"><a href="#">P</a></th>
+            <th title="Neriješene"><a href="#">N</a></th>
+            <th title="Izgubljene"><a href="#">I</a></th>
+            <th title="Zabijeni golovi"><a href="#">GZ</a></th>
+            <th title="Primljeni golovi"><a href="#">GP</a></th>
+            <th title="Gol Razlika"><a href="#">GR</a></th>
+            <th title="Bodovi"><a href="#">B</a></th>
         </tr>
     </thead>
     <tbody class="text-center">
         @foreach (var item in Model)
         {
             <tr>
-                <td style="padding: 5px">
+                <td>
                     @i
                 </td>
-                <td style="padding: 5px">
+                <td>
                     @item.Name
                 </td>
-                <td style="padding: 5px">
+                <td>
                     @item.GamesPlayed
                 </td>
-                <td style="padding: 5px">
+                <td>
                     @item.Wins
                 </td>
-                <td style="padding: 5px">
+                <td>
                     @item.Draws
                 </td>
-                <td style="padding: 5px">
+                <td>
                     @item.Losses
                 </td>
-                <td style="padding: 5px">
+                <td>
                     @item.GoalsScored
                 </td>
-                <td style="padding: 5px">
+                <td>
                     @item.GoalsConceded
                 </td>
-                <td style="padding: 5px">
+                <td>
                     @(@item.GoalsScored-@item.GoalsConceded)
                 </td>
-                <td style="padding: 5px">
+                <td>
                     @item.Points
                 </td>
             </tr>
