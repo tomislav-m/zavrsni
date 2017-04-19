@@ -1,8 +1,13 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
-    background: url(/images/cream_dust.png) repeat 0 0;
+    background: url(/images/football.jpeg) fixed;
     font-family: 'Droid Sans', sans-serif;
+    font-size: 14.5px;
+}
+
+.dropdown-menu {
+    font-size: 14.5px;
 }
 
 h1, h2, h3, h4, h5, h6, th {
@@ -14,6 +19,29 @@ h1, h2, h3, h4, h5, h6, th {
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.body-content h2 {
+    margin-top: 5px;
+}
+
+.container {
+    padding: 0;
+}
+
+footer {
+    padding-bottom: 5px;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: white;
+    border-radius: 5px;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
