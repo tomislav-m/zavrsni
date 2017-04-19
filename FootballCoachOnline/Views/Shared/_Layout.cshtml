@@ -8,16 +8,16 @@
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/lib/football/font/flaticon.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
         <link href="https://fonts.googleapis.com/css?family=Droid+Sans|Droid+Serif" rel="stylesheet">
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/lib/football/font/flaticon.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
         <link href="https://fonts.googleapis.com/css?family=Droid+Sans|Droid+Serif" rel="stylesheet">
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
@@ -37,17 +37,16 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index"><span class="glyphicon glyphicon-home"></span> Početna</a></li>
-                    <li><a asp-area="" asp-controller="Clubs" asp-action="Index"><span class="flaticon-football-badge"></span> Klubovi</a></li>
-                    <li><a asp-area="" asp-controller="Competitions" asp-action="Index"><span class="flaticon-football-trophy-award"></span> Natjecanja</a></li>
+                    <li><a asp-area="" asp-controller="Clubs" asp-action="Index">Klubovi</a></li>
+                    <li><a asp-area="" asp-controller="Competitions" asp-action="Index">Natjecanja</a></li>
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </nav>
-    <div class="container">
-        <div class="body-content">
-            @RenderBody()
-        </div>
+    <div id="white" class="container body-content">
+        @RenderBody()
+        <hr />
         <footer>
             <p>&copy; 2017 - FootballCoachOnline</p>
         </footer>

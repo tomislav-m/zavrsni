@@ -1,9 +1,14 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-    background: url(/images/football.jpeg) fixed;
+    padding-top: 60px;
+    padding-bottom: 10px;
+    background-image: url(/images/football.jpeg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    z-index: -1;
     font-family: 'Droid Sans', sans-serif;
     font-size: 14.5px;
+    /*max-height: 849px;*/
 }
 
 .dropdown-menu {
@@ -19,29 +24,11 @@ h1, h2, h3, h4, h5, h6, th {
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
-    padding-bottom: 15px;
-    padding-top: 15px;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    background-color: white;
     border-radius: 5px;
 }
 
-.body-content h2 {
-    margin-top: 5px;
-}
-
-.container {
-    padding: 0;
-}
-
-footer {
-    padding-bottom: 5px;
-    padding-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+#white {
     background-color: white;
-    border-radius: 5px;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -98,16 +85,6 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 
 .headcenter > thead > tr > th, .headcenter > tbody > tr > td {
     text-align: center;
-}
-
-.nav li a {
-    padding-left: 10px;
-    padding-right: 5px;
-    line-height: 15px;
-}
-
-.glyphicon {
-    line-height: 15px;
 }
 
 .smalltable > tbody > tr > td {
