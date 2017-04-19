@@ -8,7 +8,6 @@
     z-index: -1;
     font-family: 'Droid Sans', sans-serif;
     font-size: 14.5px;
-    /*max-height: 849px;*/
 }
 
 .dropdown-menu {
@@ -89,4 +88,8 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 
 .smalltable > tbody > tr > td {
     padding: 5px;
+}
+
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before {
+    margin-left: 0;
 }
