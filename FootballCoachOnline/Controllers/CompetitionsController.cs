@@ -47,11 +47,11 @@ namespace FootballCoachOnline.Controllers
 
             var stats = _context.TeamStats.Where(ts => ts.CompetitionId == id).ToList();
 
-            List<CompetitionTeamStatsViewModel> cts = new List<CompetitionTeamStatsViewModel>();
+            List<CompetitionTeamStats> cts = new List<CompetitionTeamStats>();
 
             foreach(var item in stats)
             {
-                cts.Add(new CompetitionTeamStatsViewModel {
+                cts.Add(new CompetitionTeamStats {
                     Draws = item.Draws,
                     GamesPlayed = item.GamesPlayed,
                     GoalsConceded = item.GoalsConceded,
@@ -63,7 +63,26 @@ namespace FootballCoachOnline.Controllers
                 });
             }
 
-            return View(cts.OrderBy(t => t.Points).ThenBy(t => t.GoalsScored - t.GoalsConceded).ThenBy(t => t.Name).ToList());
+            cts = cts.OrderByDescending(t => t.Points)
+                     .ThenByDescending(t => t.GoalsScored - t.GoalsConceded)
+                     .ThenBy(t => t.Name).ToList();
+
+            var matches = _context.Match.Where(m => m.CompetitionId == id && m.Matchday != 0)
+                          .Include(m => m.Team1)
+                          .Include(m => m.Team2)
+                          .Include(m => m.MatchScore)
+                          .GroupBy(m => m.Matchday)
+                          .Select(d => d.ToList())
+                          .ToList();
+            //matches = matches.Skip(matches.Count - 1).ToList();
+
+            CompetitionStatsMatchesViewModel vm = new CompetitionStatsMatchesViewModel
+            {
+                Matches = matches,
+                Stats = cts
+            };
+
+            return View(vm);
         }
 
         // GET: Competitions/Create

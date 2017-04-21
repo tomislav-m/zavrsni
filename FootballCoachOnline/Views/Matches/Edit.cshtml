@@ -29,10 +29,30 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="Matchday" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Matchday" class="form-control" style="width:60px" />
+                <span asp-validation-for="Matchday" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <label asp-for="Date" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Played" id="checkbox1" type="checkbox" /> Poznat rezultat?
+            </div>
+        </div>
+        <div class="form-group result">
+            <label class="col-md-2 control-label">Rezultat</label>
+            <div class="col-md-10">
+                <input name="home" type="number" value="@Model.MatchScore.Score1" style="width: 35px" /> -
+                <input name="away" type="number" value="@Model.MatchScore.Score2" style="width: 35px" />
             </div>
         </div>
         <div class="form-group">
@@ -49,4 +69,40 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            if (!$('#checkbox1').is(':checked')) {
+                $('.result').hide();
+            }
+            $('#checkbox1').click(function () {
+                if (this.checked)
+                    $('.result').fadeIn('slow');
+                else
+                    $('.result').fadeOut('slow');
+
+            });
+        });
+    </script>
+
+    <script>
+        var $dropdown1 = $('#Team1Id');
+        var $dropdown2 = $('#Team2Id');
+
+        $dropdown1.click(function () {
+            $dropdown2.find('option').prop("disabled", false);
+            var selectedItem = $(this).val();
+            if (selectedItem) {
+                $dropdown2.find('option[value="' + selectedItem + '"]').prop("disabled", true);
+            }
+        });
+
+        $dropdown2.click(function () {
+            $dropdown1.find('option').prop("disabled", false);
+            var selectedItem = $(this).val();
+            if (selectedItem) {
+                $dropdown1.find('option[value="' + selectedItem + '"]').prop("disabled", true);
+            }
+        });
+    </script>
 }

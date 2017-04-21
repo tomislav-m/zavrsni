@@ -9,9 +9,10 @@ using FootballCoachOnline.Models;
 namespace FootballCoachOnline.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170421135221_playedMatchFlag")]
+    partial class playedMatchFlag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -105,8 +106,6 @@ namespace FootballCoachOnline.Data.Migrations
                     b.Property<DateTime>("Date");
 
                     b.Property<int>("MatchScoreId");
-
-                    b.Property<int>("Matchday");
 
                     b.Property<bool>("Played");
 

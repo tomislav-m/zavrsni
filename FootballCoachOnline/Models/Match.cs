@@ -38,5 +38,10 @@ namespace FootballCoachOnline.Models
 
         [Display(Name = "Gost")]
         public virtual Team Team2 { get; set; }
+
+        public bool Played { get; set; }
+
+        [Display(Name = "Kolo")]
+        public int Matchday { get; set; }
     }
 }
