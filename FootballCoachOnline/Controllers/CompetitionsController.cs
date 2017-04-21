@@ -43,6 +43,7 @@ namespace FootballCoachOnline.Controllers
             }
 
             ViewData["CompetitionName"] = competition.Name;
+            ViewData["CompetitionId"] = competition.Id;
 
             var stats = _context.TeamStats.Where(ts => ts.CompetitionId == id).ToList();
 

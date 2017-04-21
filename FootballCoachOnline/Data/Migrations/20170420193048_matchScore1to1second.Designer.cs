@@ -9,9 +9,10 @@ using FootballCoachOnline.Models;
 namespace FootballCoachOnline.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170420193048_matchScore1to1second")]
+    partial class matchScore1to1second
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -104,8 +105,6 @@ namespace FootballCoachOnline.Data.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int>("MatchScoreId");
-
                     b.Property<int>("Team1Id");
 
                     b.Property<int>("Team2Id");
@@ -113,9 +112,6 @@ namespace FootballCoachOnline.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompetitionId");
-
-                    b.HasIndex("MatchScoreId")
-                        .IsUnique();
 
                     b.HasIndex("Team1Id");
 
@@ -129,11 +125,16 @@ namespace FootballCoachOnline.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("MatchId");
+
                     b.Property<int>("Score1");
 
                     b.Property<int>("Score2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MatchId")
+                        .IsUnique();
 
                     b.ToTable("MatchScore");
                 });
@@ -479,11 +480,6 @@ namespace FootballCoachOnline.Data.Migrations
                         .WithMany("Match")
                         .HasForeignKey("CompetitionId");
 
-                    b.HasOne("FootballCoachOnline.Models.MatchScore", "MatchScore")
-                        .WithOne("Match")
-                        .HasForeignKey("FootballCoachOnline.Models.Match", "MatchScoreId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("FootballCoachOnline.Models.Team", "Team1")
                         .WithMany("MatchTeam1")
                         .HasForeignKey("Team1Id")
@@ -493,6 +489,14 @@ namespace FootballCoachOnline.Data.Migrations
                         .WithMany("MatchTeam2")
                         .HasForeignKey("Team2Id")
                         .HasConstraintName("FK_Match_Team1");
+                });
+
+            modelBuilder.Entity("FootballCoachOnline.Models.MatchScore", b =>
+                {
+                    b.HasOne("FootballCoachOnline.Models.Match", "Match")
+                        .WithOne("MatchScore")
+                        .HasForeignKey("FootballCoachOnline.Models.MatchScore", "MatchId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("FootballCoachOnline.Models.MatchStats", b =>

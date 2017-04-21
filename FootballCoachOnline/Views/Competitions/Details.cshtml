@@ -11,63 +11,76 @@
 
 <h2>@ViewData["CompetitionName"]</h2>
 
-<table id="myTable" class="table table-striped headcenter smalltable tablesorter">
-    <thead>
-        <tr>
-            <th><a href="#">#</a></th>
-            <th><a href="#">Tim</a></th>
-            <th title="Odigrano"><a href="#">O</a></th>
-            <th title="Pobjede"><a href="#">P</a></th>
-            <th title="Neriješene"><a href="#">N</a></th>
-            <th title="Izgubljene"><a href="#">I</a></th>
-            <th title="Zabijeni golovi"><a href="#">GZ</a></th>
-            <th title="Primljeni golovi"><a href="#">GP</a></th>
-            <th title="Gol Razlika"><a href="#">GR</a></th>
-            <th title="Bodovi"><a href="#">B</a></th>
-        </tr>
-    </thead>
-    <tbody class="text-center">
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @i
-                </td>
-                <td>
-                    @item.Name
-                </td>
-                <td>
-                    @item.GamesPlayed
-                </td>
-                <td>
-                    @item.Wins
-                </td>
-                <td>
-                    @item.Draws
-                </td>
-                <td>
-                    @item.Losses
-                </td>
-                <td>
-                    @item.GoalsScored
-                </td>
-                <td>
-                    @item.GoalsConceded
-                </td>
-                <td>
-                    @(@item.GoalsScored-@item.GoalsConceded)
-                </td>
-                <td>
-                    @item.Points
-                </td>
-            </tr>
-            ++i;
-        }
-    </tbody>
-</table>
-<div>
-    <a asp-action="Index">Natrag na listu</a>
+<div class="container-fluid">
+    <div class="row">
+        <div class="smalltable col-xs-12 col-sm-12 col-md-6 col-lg-6" style="padding:5px">
+            <table id="myTable" class="table table-striped table-responsive headcenter tablesorter">
+                <thead>
+                    <tr>
+                        <th><a href="#">#</a></th>
+                        <th><a href="#">Tim</a></th>
+                        <th title="Odigrano"><a href="#">O</a></th>
+                        <th title="Pobjede"><a href="#">P</a></th>
+                        <th title="Neriješene"><a href="#">N</a></th>
+                        <th title="Izgubljene"><a href="#">I</a></th>
+                        <th title="Zabijeni golovi"><a href="#">Z</a></th>
+                        <th title="Primljeni golovi"><a href="#">P</a></th>
+                        <th title="Gol Razlika"><a href="#">R</a></th>
+                        <th title="Bodovi"><a href="#">B</a></th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    @foreach (var item in Model)
+            {
+                        <tr>
+                            <td>
+                                @i
+                            </td>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                                @item.GamesPlayed
+                            </td>
+                            <td>
+                                @item.Wins
+                            </td>
+                            <td>
+                                @item.Draws
+                            </td>
+                            <td>
+                                @item.Losses
+                            </td>
+                            <td>
+                                @item.GoalsScored
+                            </td>
+                            <td>
+                                @item.GoalsConceded
+                            </td>
+                            <td>
+                                @(@item.GoalsScored - @item.GoalsConceded)
+                            </td>
+                            <td>
+                                @item.Points
+                            </td>
+                        </tr>
+                        ++i;
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="padding:5px">
+            <h3 class="text-center">Utakmice</h3>
+        </div>
+    </div>
 </div>
+
+<div>
+    <a asp-action="Index">Natrag na listu</a> |
+    <a asp-controller="Matches" asp-action="Create" asp-route-id="@ViewBag.CompetitionId">Dodaj novu utakmicu</a>
+</div>
+
 
 @section scripts {
     <script>

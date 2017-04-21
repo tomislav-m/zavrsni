@@ -86,8 +86,8 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
     text-align: center;
 }
 
-.smalltable > tbody > tr > td {
-    padding: 5px;
+.smalltable > table > tbody > tr > td {
+    padding: 4px;
 }
 
 [class^="flaticon-"]:before, [class*=" flaticon-"]:before {

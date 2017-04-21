@@ -6,7 +6,6 @@ namespace FootballCoachOnline.Models
     public partial class MatchScore
     {
         public int Id { get; set; }
-        public int MatchId { get; set; }
         public int Score1 { get; set; }
         public int Score2 { get; set; }
 
