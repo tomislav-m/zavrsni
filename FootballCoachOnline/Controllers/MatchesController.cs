@@ -237,7 +237,7 @@ namespace FootballCoachOnline.Controllers
             var score1 = _context.MatchScore.SingleOrDefault(m => m.Match == match).Score1;
             var score2 = _context.MatchScore.SingleOrDefault(m => m.Match == match).Score2;
 
-            if (oldMatch != null)
+            if (oldMatch != null && oldMatch.Played)
             {
                 team1.GoalsScored -= oldMatch.MatchScore.Score1;
                 team2.GoalsScored -= oldMatch.MatchScore.Score2;
