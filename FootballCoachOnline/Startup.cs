@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using FootballCoachOnline.Data;
 using FootballCoachOnline.Models;
 using FootballCoachOnline.Services;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace FootballCoachOnline
 {
@@ -50,7 +52,11 @@ namespace FootballCoachOnline
             services.AddMemoryCache();
             services.AddSession();
 
-            services.AddMvc();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.AddMvc()
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
@@ -77,6 +83,21 @@ namespace FootballCoachOnline
                 // User settings
                 options.User.RequireUniqueEmail = true;
             });
+
+            services.Configure<RequestLocalizationOptions>(
+                options =>
+                {
+                    var supportedCultures = new List<CultureInfo>
+                    {
+                        new CultureInfo("hr-HR"),
+                        new CultureInfo("en-GB"),
+                        new CultureInfo("en-US")
+                    };
+
+                    options.DefaultRequestCulture = new RequestCulture(culture: "hr-HR", uiCulture: "hr-HR");
+                    options.SupportedCultures = supportedCultures;
+                    options.SupportedUICultures = supportedCultures;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

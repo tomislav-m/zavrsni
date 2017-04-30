@@ -130,7 +130,7 @@ namespace FootballCoachOnline.Controllers
                 try
                 {
                     MatchScore mc = _context.MatchScore.Where(m => m.Match == match).SingleOrDefault();
-                    if (home != null && away != null)
+                    if (match.Played && home != null && away != null)
                     {
                         mc.Score1 = home.GetValueOrDefault();
                         mc.Score2 = away.GetValueOrDefault();
@@ -263,27 +263,30 @@ namespace FootballCoachOnline.Controllers
                 }
             }
 
-            team1.GoalsScored += score1;
-            team2.GoalsScored += score2;
-            team1.GoalsConceded += score2;
-            team2.GoalsConceded += score1;
-            team1.GamesPlayed++;
-            team2.GamesPlayed++;
+            if (match.Played)
+            {
+                team1.GoalsScored += score1;
+                team2.GoalsScored += score2;
+                team1.GoalsConceded += score2;
+                team2.GoalsConceded += score1;
+                team1.GamesPlayed++;
+                team2.GamesPlayed++;
 
-            if (score1 > score2)
-            {
-                team1.Wins++;
-                team2.Losses++;
-            }
-            else if (score2 > score1)
-            {
-                team2.Wins++;
-                team1.Losses++;
-            }
-            else
-            {
-                team1.Draws++;
-                team2.Draws++;
+                if (score1 > score2)
+                {
+                    team1.Wins++;
+                    team2.Losses++;
+                }
+                else if (score2 > score1)
+                {
+                    team2.Wins++;
+                    team1.Losses++;
+                }
+                else
+                {
+                    team1.Draws++;
+                    team2.Draws++;
+                }
             }
 
             _context.Update(team1);
