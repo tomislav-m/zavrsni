@@ -8,6 +8,7 @@ namespace FootballCoachOnline.Models
         public int Id { get; set; }
         public int MatchId { get; set; }
         public int PlayerId { get; set; }
+        public int TeamId { get; set; }
         public bool App { get; set; }
         public bool Sub { get; set; }
         public int Goals { get; set; }
@@ -17,5 +18,6 @@ namespace FootballCoachOnline.Models
 
         public virtual Match Match { get; set; }
         public virtual Player Player { get; set; }
+        public virtual Team Team { get; set; }
     }
 }

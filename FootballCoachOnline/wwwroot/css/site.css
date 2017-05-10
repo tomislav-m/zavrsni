@@ -78,10 +78,6 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
     display: block;
 }
 
-.playerlink a:hover {
-    text-decoration: none;
-}
-
 .headcenter > thead > tr > th, .headcenter > tbody > tr > td {
     text-align: center;
 }
@@ -92,4 +88,18 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 
 [class^="flaticon-"]:before, [class*=" flaticon-"]:before {
     margin-left: 0;
+}
+
+.matches {
+    padding: 5px;
+    border: solid 1px black;
+}
+
+.scroll {
+    white-space: nowrap;
+    overflow-x: scroll;
+}
+
+.hide-matches {
+    display: none;
 }

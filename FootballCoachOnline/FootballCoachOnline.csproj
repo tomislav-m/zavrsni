@@ -65,5 +65,7 @@
     <Folder Include="wwwroot\lib\tablesorter\js\widgets\" />
     <Folder Include="wwwroot\lib\tablesorter\testing\" />
   </ItemGroup>
-
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
+  </ItemGroup>
 </Project>

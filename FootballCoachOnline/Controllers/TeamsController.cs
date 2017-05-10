@@ -44,7 +44,20 @@ namespace FootballCoachOnline.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Team.SingleOrDefaultAsync(m => m.Id == id);
+            var team = await _context.Team
+                             .Include(m => m.MatchTeam1)
+                             .ThenInclude(m => m.MatchScore)
+                             .Include(m => m.MatchTeam1)
+                             .ThenInclude(M => M.Team2)
+                             .Include(m => m.MatchTeam1)
+                             .ThenInclude(m => m.Competition)
+                             .Include(m => m.MatchTeam2)
+                             .ThenInclude(m => m.MatchScore)
+                             .Include(m => m.MatchTeam2)
+                             .ThenInclude(M => M.Team1)
+                             .Include(m => m.MatchTeam2)
+                             .ThenInclude(m => m.Competition)
+                             .SingleOrDefaultAsync(m => m.Id == id);
 
             if (team == null)
             {
@@ -55,6 +68,9 @@ namespace FootballCoachOnline.Controllers
             {
                 return RedirectToAction("AccessDenied", "Account", new { area = "" });
             }
+
+            var matches = team.MatchTeam1.ToList();
+            matches.AddRange(team.MatchTeam2);
             
             var players = _context.PlayerTeam.Where(t => t.TeamId == id)
                           .Select(p => p.Player)
@@ -62,9 +78,16 @@ namespace FootballCoachOnline.Controllers
                           .ThenBy(p => p.Surname)
                           .ToList();
 
+            var VM = new PlayersMatchesViewModel
+            {
+                Matches = matches.OrderBy(m => m.Date).ToList(),
+                Players = players,
+                Team = team
+            };
+
             ViewData["Team"] = team.Name;
 
-            return View(players);
+            return View(VM);
         }
 
         // GET: Teams/Create

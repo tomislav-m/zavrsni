@@ -1,0 +1,82 @@
+@model FootballCoachOnline.ViewModels.PlayersMatchViewModel
+@{
+    ViewData["Title"] = "Dodaj igrače";
+}
+
+<h2>Zapisnik</h2>
+<h3>@Model.Match.Team1.Name - @Model.Match.Team2.Name, @Html.DisplayFor(model => Model.Match.Date)</h3>
+<hr />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table table-responsive">
+                <tbody class="text-center">
+                @foreach (var item in Model.Players)
+                {
+                    <tr id="@item.Id-a" class="toggler">
+                        <td>@Html.DisplayFor(model => item.Name) @Html.DisplayFor(model => item.Surname)</td>
+                        <td>@Html.DisplayFor(model => item.NaturalPosition)</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <input hidden id="matchId" value="@Model.Match.Id" />
+        <div class="col-md-7 col-lg-offset-1">
+            <div>
+            @foreach (var item in Model.Players)
+            {
+                <form>
+                    <div class="form-horizontal">
+                        <div class="@item.Id-a toggle-container" style="display: none">
+                            <p><strong>@item.Name @item.Surname</strong></p>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Nastup </label>
+                                <input id="a-@item.Id" class="col-md-9" type="checkbox" name="app" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Zamjena </label>
+                                <input id="s-@item.Id" class="col-md-9" type="checkbox" name="sub" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Golovi </label>
+                                <input id="g-@item.Id" class="col-md-9 form-control" type="number" name="goals" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Primljeni golovi </label>
+                                <input id="gc-@item.Id" class="col-md-9 form-control" type="number" name="goalsConceded" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Žuti karton </label>
+                                <input id="y-@item.Id" class="col-md-9" type="checkbox" name="yellowCard" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Crveni karton </label>
+                                <input id="r-@item.Id" class="col-md-9" type="checkbox" name="redCard" />
+                            </div>
+                            <button data-teamid="@ViewBag.teamId" data-playerid="@item.Id" class="btn btn-primary col-md-offset-1 addajax" value="Dodaj">Dodaj</button>
+                        </div>
+                    </div>
+                </form>
+            }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('.toggler').click(function () {
+            var id = $(this).attr('id');
+            $('.' + id).toggle();
+            $('.toggle-container').not($('.' + id)).hide();
+        });
+    </script>
+
+    <script>
+        $(function () {
+            SetAddAjax('.addajax', '@Url.Action("AddPlayers", new { matchId = Model.Match.Id })');
+        });
+    </script>
+}

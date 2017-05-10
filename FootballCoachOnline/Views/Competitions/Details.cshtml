@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = ViewData["CompetitionName"];
     int i = 1;
+    bool done = false;
 }
 
 <head>
@@ -13,7 +14,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="smalltable col-xs-12 col-sm-12 col-md-8 col-lg-8" style="padding:5px">
+        <div class="smalltable col-xs-12 col-sm-12 col-md-8 col-lg-8">
             <table id="myTable" class="table table-striped table-responsive headcenter tablesorter">
                 <thead>
                     <tr>
@@ -51,13 +52,13 @@
         </div>
 
         <br />
-        <div class="smalltable col-xs-12 col-sm-12 col-md-4 col-lg-4" style="padding:5px; border:solid 1px black;">
+        <div class="smalltable matches col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <div>
                 <div><b>Utakmice</b></div>
-                <div style="white-space: nowrap; overflow-x:scroll">
+                <div class="scroll">
                     @foreach (var x in Model.Matches)
                     {
-                    <button id="@x.First().Matchday" class="btn btn-primary btn-sm match">
+                    <button id="@x.First().Matchday" class="btn btn-default btn-sm match">
                         @x.First().Matchday. kolo
                     </button>
                     }
@@ -65,7 +66,8 @@
             </div>
             @foreach (var days in Model.Matches)
             {
-            <table class="table table-responsive @days.First().Matchday toggle-container">
+            <table id="@days.First().Matchday x" class="table table-responsive hide-matches @days.First().Matchday toggle-container @((!done && days.Last().Date >= DateTime.Now.Date) ? "next" : "")">
+                @if (days.Last().Date >= DateTime.Now.Date) { done = true; }
                 <thead class="">
                     <tr>
                         <th>
@@ -79,7 +81,7 @@
                 <tbody>
                     @foreach (var item in days.OrderBy(d => d.Date))
                     {
-                    <tr style="text-align: center">
+                    <tr class="text-center">
                         <td class="col-xs-4">
                             @Html.DisplayFor(modelItem => item.Team1.Name)
                         </td>
@@ -138,13 +140,28 @@
     </script>
 
     <script>
+        var selected;
+        var i = 0;
+
         $('.toggle-container').ready(function () {
-            $('.toggle-container').hide();
-            $('.toggle-container:last').show();
+            $('.next').show();
+
+            var a = $('.next').attr('id').split(' ')[0];
+            $('#' + a).removeClass('btn-primary');
+            $('#' + a).addClass('btn-primary');
+            selected = a;
         });
 
         jQuery(".match").click(function () {
             var id = jQuery(this).attr("id");
+            $('#' + selected).removeClass('btn-primary');
+            if (selected != id) {
+                $('#' + id).addClass('btn-primary');
+                selected = id;
+            }
+            else {
+                selected = 0;
+            }
             var toggled = $('.' + id);
             $('.toggle-container').not(toggled).hide();
             toggled.toggle();

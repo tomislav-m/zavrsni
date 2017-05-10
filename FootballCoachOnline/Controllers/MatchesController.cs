@@ -7,22 +7,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FootballCoachOnline.Data;
 using FootballCoachOnline.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FootballCoachOnline.ViewModels;
 
 namespace FootballCoachOnline.Controllers
 {
     public class MatchesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public MatchesController(ApplicationDbContext context)
+        public MatchesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;    
+            _context = context;
+            _userManager = userManager;
         }
 
         // GET: Matches
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
             var applicationDbContext = _context.Match.Include(m => m.Competition).Include(m => m.MatchScore).Include(m => m.Team1).Include(m => m.Team2);
+            if(id != null)
+            {
+                return View(applicationDbContext.Where(m => m.Team1Id == id || m.Team2Id == id));
+            }
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -335,6 +344,95 @@ namespace FootballCoachOnline.Controllers
                 }
             }
             _context.SaveChanges();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> AddPlayers(int id)
+        {
+            var match = await _context.Match
+                        .Include(m => m.Team1)
+                        .Include(m => m.Team2)
+                        .SingleOrDefaultAsync(m => m.Id == id);
+            if(match == null)
+            {
+                return NotFound();
+            }
+            var userId = _userManager.GetUserId(User);
+            int teamId = 0;
+            if(match.Team1.CoachId == userId)
+            {
+                teamId = match.Team1Id;
+            }
+            else if(match.Team2.CoachId == userId)
+            {
+                teamId = match.Team2Id;
+            }
+            if (teamId == 0)
+            {
+                return RedirectToAction("AccessDenied", "Account", new { area = "" });
+            }
+            var players = _context.PlayerTeam.Where(t => t.TeamId == teamId)
+                          .Select(p => p.Player)
+                          .OrderBy(p => p.NaturalPosition)
+                          .ToList();
+
+            List<object> names = new List<object>();
+            foreach(var player in players)
+            {
+                names.Add(new
+                {
+                    Id = player.Id,
+                    Name = player.Name + " " + player.Surname
+                });
+            }
+            var team = await _context.Team.SingleOrDefaultAsync(t => t.Id == teamId);
+            ViewData["teamId"] = teamId;
+
+            var vm = new PlayersMatchViewModel
+            {
+                PlayersSL = new SelectList(names, "Id", "Name"),
+                Match = match,
+                Players = players
+            };
+
+            return View(vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddPlayers(int matchId, int teamId, bool app, bool sub, int goals, int concededGoals, bool yellowCard, bool redCard, int playerId)
+        {
+            try
+            {
+                var matchStats = new MatchStats
+                {
+                    App = app,
+                    Sub = sub,
+                    Goals = goals,
+                    GoalsConceded = concededGoals,
+                    RedCard = redCard,
+                    YellowCard = yellowCard,
+                    TeamId = teamId,
+                    MatchId = matchId,
+                    PlayerId = playerId,
+                };
+
+                var result = new
+                {
+                    message = $"Uspješno",
+                    success = true
+                };
+                return Json(result);
+            }
+            catch(Exception exc)
+            {
+                var result = new
+                {
+                    message = $"Neuspješno",
+                    success = false
+                };
+                return Json(result);
+            }
         }
     }
 }
