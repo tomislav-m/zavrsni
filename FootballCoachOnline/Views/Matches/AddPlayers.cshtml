@@ -3,6 +3,16 @@
     ViewData["Title"] = "Dodaj igrače";
 }
 
+<style>
+    .name {
+        color: rgb(51, 51, 51);
+    }
+
+    .name:hover {
+        color: rgb(51, 51, 51);
+    }
+</style>
+
 <h2>Zapisnik</h2>
 <h3>@Model.Match.Team1.Name - @Model.Match.Team2.Name, @Html.DisplayFor(model => Model.Match.Date)</h3>
 <hr />
@@ -15,7 +25,11 @@
                 @foreach (var item in Model.Players)
                 {
                     <tr id="@item.Id-a" class="toggler">
-                        <td>@Html.DisplayFor(model => item.Name) @Html.DisplayFor(model => item.Surname)</td>
+                        <td>
+                            <a class="name" href="#">
+                                @Html.DisplayFor(model => item.FullName)
+                            </a>
+                        </td>
                         <td>@Html.DisplayFor(model => item.NaturalPosition)</td>
                     </tr>
                 }
@@ -41,11 +55,11 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3">Golovi </label>
-                                <input id="g-@item.Id" class="col-md-9 form-control" type="number" name="goals" />
+                                <input id="g-@item.Id" class="col-md-9 form-control" type="number" value="@Html.DisplayFor(modelItem => item.MatchStats.SingleOrDefault(m => m.Id == Model.Match.Id).Goals)" />
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3">Primljeni golovi </label>
-                                <input id="gc-@item.Id" class="col-md-9 form-control" type="number" name="goalsConceded" />
+                                <input id="gc-@item.Id" class="col-md-9 form-control" type="number" name="concededGoals" />
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3">Žuti karton </label>

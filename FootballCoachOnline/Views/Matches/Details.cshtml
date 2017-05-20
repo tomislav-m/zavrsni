@@ -1,4 +1,4 @@
-@model FootballCoachOnline.Models.Match
+﻿@model FootballCoachOnline.Models.Match
 
 @{
     ViewData["Title"] = "Detalji";
@@ -8,40 +8,114 @@
     @Html.DisplayFor(model => model.Team1.Name) - @Html.DisplayFor(model => model.Team2.Name)
 </h3>
 
-<div>
+<div class="row">
     <hr />
-    <a asp-controller="Matches" asp-action="AddPlayers" asp-route-id="@Model.Id">
-        <button class="btn btn-sm btn-primary">
-            <span class="glyphicon glyphicon-plus"></span> Dodaj postavu
-        </button>
-    </a>
-    <dl class="dl-horizontal">
-        <dt>
-            Rezultat
-        </dt>
-        @if (Model.Played)
-        {
+    <div class="col-md-5">
+        <a asp-controller="Matches" asp-action="AddPlayers" asp-route-id="@Model.Id">
+            <button class="btn btn-sm btn-primary">
+                <span class="glyphicon glyphicon-plus"></span> Dodaj postavu
+            </button>
+        </a>
+        <dl class="dl-horizontal">
+            <dt>
+                Rezultat
+            </dt>
+            @if (Model.Played)
+            {
+                <dd>
+                    @Html.DisplayFor(model => model.MatchScore.Score1) : @Html.DisplayFor(model => model.MatchScore.Score2)
+                </dd>
+            }
+            else
+            {
+                <dd>Nije igrano</dd>
+            }
+            <dt>
+                @Html.DisplayNameFor(model => model.Competition)
+            </dt>
             <dd>
-                @Html.DisplayFor(model => model.MatchScore.Score1) : @Html.DisplayFor(model => model.MatchScore.Score2)
+                @Html.DisplayFor(model => model.Competition.Name)
             </dd>
-        }
-        else
-        {
-            <dd>Nije igrano</dd>
-        }
-        <dt>
-            @Html.DisplayNameFor(model => model.Competition)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Competition.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-    </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Date)
+            </dt>
+            <dd>
+                @Model.Date
+            </dd>
+        </dl>
+        <div class="col-md-offset-2 col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Golovi</strong></div>
+                <div class="panel-body">
+                    @foreach (var item in Model.MatchStats.Where(p => p.Goals > 0))
+                    {
+                        <span>@item.Player.FullName - @item.Goals  (@item.Team.Name)</span><br />
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-offset-2 col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Žuti kartoni</strong></div>
+                <div class="panel-body">
+                    @foreach (var item in Model.MatchStats.Where(p => p.YellowCard))
+                    {
+                        <span>@item.Player.FullName (@item.Team.Name)</span><br />
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-offset-2 col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Crveni kartoni</strong></div>
+                <div class="panel-body">
+                    @foreach (var item in Model.MatchStats.Where(p => p.RedCard))
+                    {
+                        <span>@item.Player.FullName  (@item.Team.Name)</span><br />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
+    @if(Model.MatchStats.Count() > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Prvi sastav</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach(var item in Model.MatchStats.Where(p => p.App && !p.Sub).OrderBy(p => p.Player.NaturalPosition))
+            {
+                <tr>
+                    <td>@item.Player.FullName</td>
+                    <td>@item.Player.NaturalPosition</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Zamjene</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.MatchStats.Where(p => p.Sub).OrderBy(p => p.Player.NaturalPosition))
+            {
+                <tr>
+                    <td>@item.Player.FullName</td>
+                    <td>@item.Player.NaturalPosition</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

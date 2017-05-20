@@ -23,6 +23,7 @@
                         </a></li>
                     }
                     <li class="divider"></li>
+                    <li><a asp-controller="Calendar" asp-action="Index">Kalendar</a></li>
                     @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrator"))
                     {
                         <li>

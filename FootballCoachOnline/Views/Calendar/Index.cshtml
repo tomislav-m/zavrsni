@@ -1,0 +1,39 @@
+@model Match
+
+@{
+    ViewData["Title"] = "Kalendar";
+}
+
+<link rel="stylesheet" href="~/lib/fullcalendar/dist/fullcalendar.css" />
+
+<h2>Kalendar</h2>
+<div id="calendar"></div>
+
+@section Scripts{
+    <script src="~/lib/moment/moment.js"></script>
+    <script src="~/lib/fullcalendar/dist/fullcalendar.js"></script>
+    <script src='~/lib/fullcalendar/dist/locale/hr.js'></script>
+
+    <script>
+        $(document).ready(function () {
+            $.get('@Url.Action("GetEvents", "Calendar")', function (data) {
+                var events = data;
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'month,agendaWeek,agendaDay,list',
+                        center: 'title',
+                        right: 'today prev,next'
+                    },
+                    defaultView: 'agendaWeek',
+                    allDaySlot: 'false',
+                    nowIndicator: 'true',
+                    scrollTime: '12:00:00',
+                    fixedWeekCount: false,
+                    firstDay: 1,
+                    height: 600,
+                    events: events
+                });
+            });
+        });
+    </script>
+}

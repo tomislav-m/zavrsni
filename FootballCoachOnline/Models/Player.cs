@@ -47,5 +47,12 @@ namespace FootballCoachOnline.Models
         public virtual ICollection<PlayerStats> PlayerStats { get; set; }
         public virtual ICollection<PlayerTeam> PlayerTeam { get; set; }
         public virtual ICollection<Test> Test { get; set; }
+
+        public string FullName {
+            get
+            {
+                return Name + " " + Surname;
+            }
+        }
     }
 }

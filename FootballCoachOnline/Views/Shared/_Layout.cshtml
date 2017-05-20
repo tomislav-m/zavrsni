@@ -49,6 +49,18 @@
         </div>
     </nav>
     <div id="white" class="container body-content">
+        <div id="tempmessage">
+            @if (TempData[Constants.Message] != null)
+            {
+                bool error = false;
+                var obj = TempData[Constants.ErrorOccurred];
+                if (obj != null)
+                {
+                    error = (bool)obj;
+                }
+                <div class="alert @(error ? "alert-danger" : "alert-success")">@TempData[Constants.Message]</div>
+            }
+        </div>
         @RenderBody()
         <hr />
         <footer>

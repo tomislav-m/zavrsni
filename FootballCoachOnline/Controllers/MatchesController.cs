@@ -27,10 +27,14 @@ namespace FootballCoachOnline.Controllers
         // GET: Matches
         public async Task<IActionResult> Index(int? id)
         {
-            var applicationDbContext = _context.Match.Include(m => m.Competition).Include(m => m.MatchScore).Include(m => m.Team1).Include(m => m.Team2);
+            var applicationDbContext = _context.Match
+                                               .Include(m => m.Competition)
+                                               .Include(m => m.MatchScore)
+                                               .Include(m => m.Team1)
+                                               .Include(m => m.Team2);
             if(id != null)
             {
-                return View(applicationDbContext.Where(m => m.Team1Id == id || m.Team2Id == id));
+                return View(applicationDbContext.Where(m => m.Team1Id == id || m.Team2Id == id).ToListAsync());
             }
             return View(await applicationDbContext.ToListAsync());
         }
@@ -46,6 +50,8 @@ namespace FootballCoachOnline.Controllers
             var match = await _context.Match
                 .Include(m => m.Competition)
                 .Include(m => m.MatchScore)
+                .Include(m => m.MatchStats)
+                .ThenInclude(m => m.Player)
                 .Include(m => m.Team1)
                 .Include(m => m.Team2)
                 .SingleOrDefaultAsync(m => m.Id == id);
@@ -373,6 +379,7 @@ namespace FootballCoachOnline.Controllers
             }
             var players = _context.PlayerTeam.Where(t => t.TeamId == teamId)
                           .Select(p => p.Player)
+                          .Include(p => p.MatchStats)
                           .OrderBy(p => p.NaturalPosition)
                           .ToList();
 
@@ -394,6 +401,10 @@ namespace FootballCoachOnline.Controllers
                 Match = match,
                 Players = players
             };
+            if(match.MatchStats != null)
+            {
+                vm.MatchStats = match.MatchStats.ToList();
+            }
 
             return View(vm);
         }
@@ -402,24 +413,44 @@ namespace FootballCoachOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPlayers(int matchId, int teamId, bool app, bool sub, int goals, int concededGoals, bool yellowCard, bool redCard, int playerId)
         {
+            var player = _context.Player.SingleOrDefault(p => p.Id == playerId);
             try
             {
-                var matchStats = new MatchStats
+                var matchStatsOld = _context.MatchStats.SingleOrDefault(m => m.PlayerId == playerId && m.MatchId == matchId);
+                if (matchStatsOld == null)
                 {
-                    App = app,
-                    Sub = sub,
-                    Goals = goals,
-                    GoalsConceded = concededGoals,
-                    RedCard = redCard,
-                    YellowCard = yellowCard,
-                    TeamId = teamId,
-                    MatchId = matchId,
-                    PlayerId = playerId,
-                };
+                    var matchStats = new MatchStats
+                    {
+                        App = app,
+                        Sub = sub,
+                        Goals = goals,
+                        GoalsConceded = concededGoals,
+                        RedCard = redCard,
+                        YellowCard = yellowCard,
+                        TeamId = teamId,
+                        MatchId = matchId,
+                        PlayerId = playerId,
+                    };
+
+                    _context.MatchStats.Add(matchStats);
+                }
+                else
+                {
+                    matchStatsOld.App = app;
+                    matchStatsOld.Sub = sub;
+                    matchStatsOld.Goals = goals;
+                    matchStatsOld.GoalsConceded = concededGoals;
+                    matchStatsOld.RedCard = redCard;
+                    matchStatsOld.YellowCard = yellowCard;
+
+                    _context.Update(matchStatsOld);
+                }
+
+                await _context.SaveChangesAsync();
 
                 var result = new
                 {
-                    message = $"Uspješno",
+                    message = $"Igrač {player.FullName} uspješno dodan.",
                     success = true
                 };
                 return Json(result);
@@ -428,7 +459,7 @@ namespace FootballCoachOnline.Controllers
             {
                 var result = new
                 {
-                    message = $"Neuspješno",
+                    message = $"Neuspješno dodavanje igrača {player.FullName}!",
                     success = false
                 };
                 return Json(result);

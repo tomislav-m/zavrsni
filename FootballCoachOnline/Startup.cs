@@ -121,6 +121,12 @@ namespace FootballCoachOnline
             app.UseSession();
             app.UseIdentity();
 
+            var cultureInfo = new CultureInfo("hr-HR");
+            cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
