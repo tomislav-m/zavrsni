@@ -96,7 +96,7 @@ namespace FootballCoachOnline.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Competition competition)
+        public async Task<IActionResult> Create([Bind("Id,Name,ShortName")] Competition competition)
         {
             if (ModelState.IsValid)
             {
@@ -128,7 +128,7 @@ namespace FootballCoachOnline.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Competition competition)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ShortName")] Competition competition)
         {
             if (id != competition.Id)
             {

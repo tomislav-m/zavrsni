@@ -59,7 +59,7 @@ namespace FootballCoachOnline.Controllers
                         }
                         var result = new
                         {
-                            title = "Utakmica\n" + match.Team1.Name + score + match.Team2.Name,
+                            title = "Utakmica\n" + match.Team1.ShortName + score + match.Team2.ShortName,
                             start = match.Date,
                             end = match.Date.AddMinutes(105),
                             url = Url.Action("Details", "Matches", new { id = match.Id })
@@ -71,11 +71,11 @@ namespace FootballCoachOnline.Controllers
                     {
                         var result = new
                         {
-                            title = "Trening\n" + item.Name,
+                            title = "Trening\n" + item.ShortName,
                             start = training.Date,
                             end = training.Date,
                             url = Url.Action("Details", "Trainings", new { id = training.Id }),
-                            color = "red"
+                            color = "green"
                         };
                         events.Add(result);
                     }

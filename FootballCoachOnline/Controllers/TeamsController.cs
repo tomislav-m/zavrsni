@@ -54,7 +54,7 @@ namespace FootballCoachOnline.Controllers
                              .Include(m => m.MatchTeam2)
                              .ThenInclude(m => m.MatchScore)
                              .Include(m => m.MatchTeam2)
-                             .ThenInclude(M => M.Team1)
+                             .ThenInclude(m => m.Team1)
                              .Include(m => m.MatchTeam2)
                              .ThenInclude(m => m.Competition)
                              .SingleOrDefaultAsync(m => m.Id == id);
@@ -103,7 +103,7 @@ namespace FootballCoachOnline.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CoachId,ClubId,Name,Age")] Team team)
+        public async Task<IActionResult> Create([Bind("Id,CoachId,ClubId,Name,Age,ShortName")] Team team)
         {
             if (ModelState.IsValid)
             {
@@ -157,7 +157,7 @@ namespace FootballCoachOnline.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CoachId,ClubId,Name,Age")] Team team)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CoachId,ClubId,Name,Age,ShortName")] Team team)
         {
             if (id != team.Id)
             {

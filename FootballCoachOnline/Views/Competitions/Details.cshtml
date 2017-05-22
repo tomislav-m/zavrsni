@@ -42,7 +42,18 @@
                         <td>@item.Losses</td>
                         <td>@item.GoalsScored</td>
                         <td>@item.GoalsConceded</td>
-                        <td>@(@item.GoalsScored - @item.GoalsConceded)</td>
+                        <td>
+                            @if ((item.GoalsScored - item.GoalsConceded) > 0)
+                            {
+                                <span>
+                                    +@(item.GoalsScored-item.GoalsConceded)
+                                </span>
+                            }
+                            else
+                            {
+                                @(item.GoalsScored - item.GoalsConceded)
+                            }
+                        </td>
                         <td>@item.Points</td>
                     </tr>
                     ++i;

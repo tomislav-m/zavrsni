@@ -18,6 +18,13 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="ShortName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ShortName" class="form-control" />
+                <span asp-validation-for="ShortName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Dodaj" class="btn btn-default" />
             </div>

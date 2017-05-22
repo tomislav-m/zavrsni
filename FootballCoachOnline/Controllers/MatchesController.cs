@@ -308,14 +308,19 @@ namespace FootballCoachOnline.Controllers
             _context.Update(team2);
         }
 
-        public void GenerateMatches()
+        public IActionResult GenerateMatches(int? id)
         {
-            var competition = _context.Competition.SingleOrDefault(c => c.Id == 1);
+            var competition = _context.Competition.SingleOrDefault(c => c.Id == id);
+
+            if (competition == null)
+            {
+                return NotFound();
+            }
 
             var teams = from t in _context.Team
                         join tc in _context.TeamCompetition
                         on t.Id equals tc.TeamId
-                        where tc.CompetitionId == 1
+                        where tc.CompetitionId == id
                         select t;
 
             var teams2 = new List<Team>();
@@ -339,7 +344,7 @@ namespace FootballCoachOnline.Controllers
 
                     Match match = new Match
                     {
-                        CompetitionId = 1,
+                        CompetitionId = id,
                         Team1Id = t.Id,
                         Team2Id = t2.Id,
                         MatchScore = matchScore
@@ -350,6 +355,8 @@ namespace FootballCoachOnline.Controllers
                 }
             }
             _context.SaveChanges();
+
+            return RedirectToAction("Details", "Competitions", new {id});
         }
 
         [Authorize]

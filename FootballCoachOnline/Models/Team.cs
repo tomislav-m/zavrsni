@@ -30,6 +30,10 @@ namespace FootballCoachOnline.Models
         [Required]
         public string Age { get; set; }
 
+        [Display(Name = "Skraćenica")]
+        [Required]
+        public string ShortName { get; set; }
+
         public virtual ICollection<Match> MatchTeam1 { get; set; }
         public virtual ICollection<Match> MatchTeam2 { get; set; }
         public virtual ICollection<PlayerStats> PlayerStats { get; set; }

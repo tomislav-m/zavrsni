@@ -18,6 +18,9 @@ namespace FootballCoachOnline.Models
         [Display(Name = "Ime")]
         public string Name { get; set; }
 
+        [Display(Name = "Skraćenica")]
+        public string ShortName { get; set; }
+
         public virtual ICollection<Match> Match { get; set; }
         public virtual ICollection<TeamCompetition> TeamCompetition { get; set; }
         public virtual ICollection<TeamStats> TeamStats { get; set; }

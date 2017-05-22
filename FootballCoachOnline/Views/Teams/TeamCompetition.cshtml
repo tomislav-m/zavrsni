@@ -4,19 +4,6 @@
     ViewData["Title"] = "Natjecanja";
 }
 
-<div class="panel-body">
-    @if (TempData[Constants.Message] != null)
-    {
-        bool error = false;
-        var obj = TempData[Constants.ErrorOccurred];
-        if (obj != null)
-        {
-            error = (bool)obj;
-        }
-        <div class="alert @(error ? "alert-danger" : "alert-success")">@TempData[Constants.Message]</div>
-    }
-</div>
-
 <h2>Natjecanja</h2>
 <h4>@Model.Team.Name</h4>
 

@@ -9,9 +9,10 @@ using FootballCoachOnline.Models;
 namespace FootballCoachOnline.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170522205459_competitionShortName")]
+    partial class competitionShortName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -265,9 +266,6 @@ namespace FootballCoachOnline.Data.Migrations
                     b.Property<string>("CoachId");
 
                     b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<string>("ShortName")
                         .IsRequired();
 
                     b.HasKey("Id");
