@@ -1,4 +1,4 @@
-@model FootballCoachOnline.Models.Player
+@model FootballCoachOnline.ViewModels.PlayerProfileViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -6,71 +6,118 @@
 
 <div id="tempmessage"></div>
 
-<div>
-    <h3>@Model.Name @Model.Surname</h3>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.TeamId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TeamId)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Surname)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Surname)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DateOfBirth)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.PlaceOfBirth)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PlaceOfBirth)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Nationality)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Nationality)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.NaturalPosition)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.NaturalPosition)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Physical)
-        </dt>
-        <dd>
-            <form asp-action="EditPhysical" method="post">
-                <input asp-for="@Model.Physical" data-playerid="@Model.Id" class="editajax" />
-            </form>
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Role)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Role)
-        </dd>
-    </dl>
+<div class="container-fluid">
+    <div class="row">
+        <h3 style="margin-left: 15px;"><strong>@Model.Player.FullName</strong></h3>
+        <hr />
+        <div class="col-md-4">
+            <div class="details">
+                <div class="title">Osobni podaci</div>
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr class="clickable" title="Kliknite za detalje tima">
+                            <td>
+                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.TeamId">
+                                    <strong>@Html.DisplayNameFor(model => model.Stats.Team)</strong>
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.TeamId">
+                                    @Html.DisplayFor(model => model.Stats.Team.Name)
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(model => model.Player.DateOfBirth)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Player.DateOfBirth)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(model => model.Player.PlaceOfBirth)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Player.PlaceOfBirth)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(model => model.Player.Nationality)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Player.Nationality)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(model => model.Player.NaturalPosition)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Player.NaturalPosition)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <dl class="dl-horizontal">
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Player.Physical)
+                    </dt>
+                    <dd>
+                        <form asp-action="EditPhysical" method="post">
+                            <input asp-for="@Model.Player.Physical" data-playerid="@Model.Player.Id" class="editajax" />
+                        </form>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="details">
+                <div class="title">Statistika</div>
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>@Html.DisplayNameFor(model => model.Stats.Apps)</strong>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Stats.Apps) (@Html.DisplayFor(model => model.Stats.Subs))
+                            </td>
+                        </tr>
+                        <tr>
+                            @if (Model.Player.NaturalPosition == Player.Position.golman)
+                            {
+                                <td>
+                                    <strong>@Html.DisplayNameFor(model => model.Stats.GoalsConceded)</strong>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => model.Stats.GoalsConceded)
+                                    <span title="zabijeni golovi">(@Html.DisplayFor(model => model.Stats.Goals))</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <strong>@Html.DisplayNameFor(model => model.Stats.Goals)</strong>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => model.Stats.Goals)
+                                </td>
+                            }
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.TeamId">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Player.Id">Edit</a> |
+    <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.TeamId">Back to List</a>
 </div>
 
 @section Scripts {

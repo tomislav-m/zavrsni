@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FootballCoachOnline.Data;
 using FootballCoachOnline.Models;
 using Microsoft.AspNetCore.Identity;
+using FootballCoachOnline.ViewModels;
 
 namespace FootballCoachOnline.Controllers
 {
@@ -29,21 +30,34 @@ namespace FootballCoachOnline.Controllers
         }
 
         // GET: Players/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? year)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            if(year == null)
+            {
+                year = DateTime.Now.Year;
+            }
 
-            var player = await _context.Player
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var player = await _context.Player.SingleOrDefaultAsync(m => m.Id == id);
+            var stats = await _context.PlayerStats
+                .Where(s => s.PlayerId == id && s.Year.Year == year)
+                .Include(s => s.Team)
+                .SingleOrDefaultAsync();
+
             if (player == null)
             {
                 return NotFound();
             }
+            var vm = new PlayerProfileViewModel
+            {
+                Player = player,
+                Stats = stats
+            };
 
-            return View(player);
+            return View(vm);
         }
 
         // GET: Players/Create

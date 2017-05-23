@@ -35,6 +35,12 @@ namespace FootballCoachOnline.Controllers
                                                .OrderBy(m => m.Date);
             if(id != null)
             {
+                var team = await _context.Team.SingleOrDefaultAsync(t => t.Id == id);
+                if(team == null)
+                {
+                    return NotFound();
+                }
+                ViewData["Team"] = " - " + team.Name;
                 return View(await applicationDbContext.Where(m => m.Team1Id == id || m.Team2Id == id).ToListAsync());
             }
             return View(await applicationDbContext.ToListAsync());

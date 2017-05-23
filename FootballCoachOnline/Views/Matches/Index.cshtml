@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<FootballCoachOnline.Models.Match>
 
 @{
-    ViewData["Title"] = "Utakmice";
+    ViewData["Title"] = "Utakmice" + ViewBag.Team;
 }
 
-<h2>Utakmice</h2>
+<h2>Utakmice @ViewBag.Team</h2>
 
 <p>
     <a class="btn btn-primary btn-sm" asp-action="Create">

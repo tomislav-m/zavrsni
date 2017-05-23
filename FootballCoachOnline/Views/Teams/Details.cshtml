@@ -15,7 +15,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="smalltable col-xs-12 col-sm-12 col-md-7 col-lg-7">
-            <table class="table headcenter">
+            <table class="table table-hover headcenter">
                 <thead>
                     <tr>
                         <th>
@@ -36,7 +36,7 @@
                     {
                         <tr>
                             <td class="playerlink">
-                                <a asp-controller="Players" asp-action="Details" asp-route-id="@item.Id">
+                                <a asp-controller="Players" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
                                     @Html.DisplayFor(modelItem => item.Name) @Html.DisplayFor(modelItem => item.Surname)
                                 </a>
                             </td>
@@ -56,7 +56,7 @@
                             <td>
                                 <form asp-controller="Players" asp-action="Delete" method="post">
                                     <div class="btn-group">
-                                        <a  class="btn btn-warning btn-xs" asp-controller="Players" asp-action="Edit" asp-route-id="@item.Id">
+                                        <a title="Uredi" class="btn btn-warning btn-xs" asp-controller="Players" asp-action="Edit" asp-route-id="@item.Id">
                                             <span class="glyphicon glyphicon-edit"></span>
                                         </a>
                                         <input type="hidden" name="id" value="@item.Id" />
@@ -74,14 +74,14 @@
 
         <br />
         <div class="smalltable col-xs-12 col-sm-12 col-md-5 col-lg-5">
-            <div class="smalltable">
+            <div class="smalltable details">
                 <div>
                     <a asp-controller="Matches" asp-action="Index" asp-route-id="@Model.Team.Id" class="pull-right">
                         <span class="glyphicon glyphicon-link"></span> Sve utakmice
                     </a>
                     <b>Utakmice</b>
                 </div>
-                <table class="table table-responsive">
+                <table class="table table-hover table-responsive">
                     <tbody class="text-center">
                         @foreach (var item in Model.Matches)
                         {
@@ -90,7 +90,7 @@
                                 {
                                     <td title="doma">D</td>
                                     <td class="playerlink">
-                                        <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id">
+                                        <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
                                             @Html.DisplayFor(model => item.Team2.ShortName)
                                         </a>
                                     </td>
@@ -105,7 +105,7 @@
                                 {
                                     <td title="u gostima">G</td>
                                     <td class="playerlink">
-                                        <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id">
+                                        <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
                                             @Html.DisplayFor(model => item.Team1.ShortName)
                                         </a>
                                     </td>
@@ -120,8 +120,10 @@
                                 {
                                     <td>: - :</td>
                                 }
-                                <td title="Natjecanje">
-                                    @item.Competition.ShortName
+                                <td title="Natjecanje" class="playerlink">
+                                    <a asp-controller="Competitions" asp-action="Details" asp-route-id="@item.CompetitionId">
+                                        @item.Competition.ShortName
+                                    </a>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(model => item.Date)
@@ -131,7 +133,8 @@
                     </tbody>
                 </table>
             </div>
-            <div class="smalltable">
+            <br />
+            <div class="smalltable details">
                 <div>
                     <a asp-controller="Trainings" asp-action="Index" asp-route-id="@Model.Team.Id" class="pull-right">
                         <span class="glyphicon glyphicon-link"></span> Svi treninzi
@@ -141,12 +144,17 @@
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
                 </div>
-                <table class="table table-responsive">
+                <table class="table table-hover table-responsive">
                     <tbody>
                         @foreach (var item in Model.Trainings)
                         {
                             <tr class="@(item.Date.Date > DateTime.Now.Date ? "gray" : "")">
                                 <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                                <td>
+                                    <a asp-controller="Trainings" asp-action="Details" asp-route-id="@item.Id" class="btn btn-xs btn-info" title="Detalji">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                    </a>
+                                </td>
                             </tr>
                         }
                     </tbody>
