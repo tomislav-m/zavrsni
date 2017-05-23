@@ -14,12 +14,12 @@ namespace FootballCoachOnline.Controllers
     public class PlayersController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public PlayersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
-            this.userManager = userManager;
+            _userManager = userManager;
         }
 
         // GET: Players
@@ -49,9 +49,9 @@ namespace FootballCoachOnline.Controllers
         // GET: Players/Create
         public IActionResult Create()
         {
-            var teams = _context.Team.Where(t => t.CoachId == userManager.GetUserId(User));
+            var teams = _context.Team.Where(t => t.CoachId == _userManager.GetUserId(User));
 
-            ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
+            ViewData["TeamId"] = new SelectList(_context.Team.Where(t => t.CoachId == _userManager.GetUserId(User)), "Id", "Name", TempData["TeamId"]);
 
             var positions = from Player.Position p in Enum.GetValues(typeof(Player.Position))
                             select new { Id = (int)p, Name = p.ToString() };
@@ -67,9 +67,13 @@ namespace FootballCoachOnline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TeamId,Name,Surname,DateOfBirth,PlaceOfBirth,Nationality,NaturalPosition,Physical,Role")] Player player)
         {
+            var team = await _context.Team.SingleOrDefaultAsync(t => t.Id == player.TeamId);
+            if(_userManager.GetUserId(User) != team.CoachId)
+            {
+                return RedirectToAction("AccessDenied", "Account", "");
+            }
             if (ModelState.IsValid)
             {
-                var team = _context.Team.SingleOrDefault(t => t.Id == player.TeamId);
                 _context.Add(player);
                 PlayerTeam pt = new PlayerTeam
                 {
@@ -106,7 +110,7 @@ namespace FootballCoachOnline.Controllers
             {
                 return NotFound();
             }
-            var teams = _context.Team.Where(t => t.CoachId == userManager.GetUserId(User));
+            var teams = _context.Team.Where(t => t.CoachId == _userManager.GetUserId(User));
             ViewData["TeamId"] = new SelectList(teams, "Id", "Name");
 
             var positions = from Player.Position p in Enum.GetValues(typeof(Player.Position))

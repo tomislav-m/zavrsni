@@ -1,24 +1,27 @@
-@model IEnumerable<FootballCoachOnline.Models.Match>
+﻿@model IEnumerable<FootballCoachOnline.Models.Match>
 
 @{
-    ViewData["Title"] = "Index";
-    int i = 1;
+    ViewData["Title"] = "Utakmice";
 }
 
-<h2>Index</h2>
+<h2>Utakmice</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary btn-sm" asp-action="Create">
+        <span class="glyphicon glyphicon-plus"></span> Dodaj novu
+    </a>
 </p>
-<table id="myTable" class="table">
+<table id="myTable" class="table headcenter">
     <thead>
-        <tr>
-            <th></th>
+        <tr class="text-center">
             <th>
                 @Html.DisplayNameFor(model => model.Team1)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Team2)
+            </th>
+            <th>
+                Rezultat
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Date)
@@ -33,12 +36,14 @@
 @foreach (var item in Model)
 {
         <tr>
-            <td>@i</td>
             <td>
                 @Html.DisplayFor(modelItem => item.Team1.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Team2.Name)
+            </td>
+            <td>
+                <span>@(item.Played ? item.MatchScore.Score1.ToString()+":"+item.MatchScore.Score2.ToString() : "-")</span>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
@@ -47,20 +52,29 @@
                 @Html.DisplayFor(modelItem => item.Competition.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <div class="btn-group">
+                    <a class="btn btn-info btn-xs" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                    </a>
+                    <a class="btn btn-warning btn-xs" asp-action="Edit" asp-route-id="@item.Id" title="Uredi">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                    <a class="btn btn-danger btn-xs deleteajax" data-id="@item.Id" title="Obriši">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
             </td>
         </tr>
-        ++i;
 }
     </tbody>
 </table>
 
 @section Scripts {
     <script>
-        $("#myTable").tablesorter({
-            sortList: [[1, 0], [2, 0]] 
-        });
+        $("#myTable").tablesorter();
+    </script>
+
+    <script>
+        SetDeleteAjax(".deleteajax", '@Url.Action("DeleteAjax")', 'id');
     </script>
 }

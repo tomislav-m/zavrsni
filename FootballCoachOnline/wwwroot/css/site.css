@@ -103,3 +103,7 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 .hide-matches {
     display: none;
 }
+
+.gray {
+    background-color: #f9f9f9;
+}

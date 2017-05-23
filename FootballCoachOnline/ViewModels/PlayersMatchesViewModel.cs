@@ -10,6 +10,7 @@ namespace FootballCoachOnline.ViewModels
     {
         public List<Player> Players { get; set; }
         public List<Match> Matches { get; set; }
+        public List<Training> Trainings { get; set; }
         public Team Team { get; set; }
     }
 }

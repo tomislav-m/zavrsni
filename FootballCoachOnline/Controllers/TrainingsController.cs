@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FootballCoachOnline.Data;
 using FootballCoachOnline.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FootballCoachOnline.Controllers
 {
     public class TrainingsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TrainingsController(ApplicationDbContext context)
+        public TrainingsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;    
+            _context = context;
+            _userManager = userManager;
         }
 
         // GET: Trainings
@@ -25,7 +28,7 @@ namespace FootballCoachOnline.Controllers
             var applicationDbContext = _context.Training.Include(t => t.Team);
             if(id != null)
             {
-                return View(applicationDbContext.Where(t => t.TeamId == id).ToListAsync());
+                return View(await applicationDbContext.Where(t => t.TeamId == id).ToListAsync());
             }
             return View(await applicationDbContext.ToListAsync());
         }
@@ -52,7 +55,7 @@ namespace FootballCoachOnline.Controllers
         // GET: Trainings/Create
         public IActionResult Create()
         {
-            ViewData["TeamId"] = new SelectList(_context.Team, "Id", "Name");
+            ViewData["TeamId"] = new SelectList(_context.Team.Where(t => t.CoachId == _userManager.GetUserId(User)), "Id", "Name", TempData["TeamId"]);
             return View();
         }
 
@@ -63,6 +66,11 @@ namespace FootballCoachOnline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TeamId,Date,Description")] Training training)
         {
+            var team = await _context.Team.SingleOrDefaultAsync(t => t.Id == training.TeamId);
+            if(_userManager.GetUserId(User) != team.CoachId)
+            {
+                return RedirectToAction("AccessDenied", "Account", "");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(training);

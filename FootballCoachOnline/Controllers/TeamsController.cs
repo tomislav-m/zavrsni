@@ -71,18 +71,29 @@ namespace FootballCoachOnline.Controllers
 
             var matches = team.MatchTeam1.ToList();
             matches.AddRange(team.MatchTeam2);
-            
+            var matchesP = matches.Where(m => m.Date.Date <= DateTime.Now.Date).OrderByDescending(m => m.Date).Take(5).ToList();
+            var matchesF = matches.Where(m => m.Date.Date > DateTime.Now.Date).OrderByDescending(m => m.Date).Take(10-matchesP.Count()).ToList();
+            matches.Clear();
+            matches.AddRange(matchesF);
+            matches.AddRange(matchesP);
+
             var players = _context.PlayerTeam.Where(t => t.TeamId == id)
                           .Select(p => p.Player)
                           .OrderBy(p => p.NaturalPosition)
                           .ThenBy(p => p.Surname)
                           .ToList();
 
+            var trainings = _context.Training.Where(t => t.TeamId == id)
+                            .OrderByDescending(t => t.Date)
+                            .Take(5)
+                            .ToList();
+
             var VM = new PlayersMatchesViewModel
             {
                 Matches = matches.OrderBy(m => m.Date).ToList(),
                 Players = players,
-                Team = team
+                Team = team,
+                Trainings = trainings
             };
 
             ViewData["Team"] = team.Name;

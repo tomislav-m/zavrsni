@@ -5,7 +5,16 @@
 }
 
 <h3>
-    @Html.DisplayFor(model => model.Team1.Name) - @Html.DisplayFor(model => model.Team2.Name)
+    @Html.DisplayFor(model => model.Team1.Name)
+    @if (Model.Played)
+    {
+        <span>@Model.MatchScore.Score1 : @Model.MatchScore.Score2</span>
+    }
+    else
+    {
+        <span>-</span>
+    }
+    @Html.DisplayFor(model => model.Team2.Name)
 </h3>
 
 <div class="row">

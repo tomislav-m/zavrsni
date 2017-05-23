@@ -10,7 +10,8 @@ namespace FootballCoachOnline.Models
         [Display(Name = "Tim")]
         public int TeamId { get; set; }
 
-        [Display(Name = "Datum")]
+        [Display(Name = "Datum"), DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy. HH:mm}")]
         public DateTime Date { get; set; }
 
         [Display(Name = "Opis")]

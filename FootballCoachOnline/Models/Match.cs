@@ -25,7 +25,8 @@ namespace FootballCoachOnline.Models
         [Display(Name = "Gost")]
         public int Team2Id { get; set; }
         
-        [Display(Name = "Datum"), DataType(DataType.Date)]
+        [Display(Name = "Datum"), DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy. HH:mm}")]
         public DateTime Date { get; set; }
 
         public virtual ICollection<MatchStats> MatchStats { get; set; }

@@ -12,6 +12,30 @@
     });
 }
 
+function SetDeleteAjax(selector, url, paramname) {
+    $(document).on('click', selector, function (event) {
+        event.preventDefault();
+        var paramval = $(this).data(paramname);
+        var tr = $(this).parents('tr');
+        if (confirm('Obrisati zapis?')) {
+            var token = $('input[name="__RequestVerificationToken"]').first().val();
+            $("#tempmessage").removeClass("alert-success");
+            $("#tempmessage").removeClass("alert-danger");
+            $("#tempmessage").html('');
+            $.post(url, { id: paramval, __RequestVerificationToken: token }, function (data) {
+                if (data.success) {
+                    $(tr).remove();
+                }
+                $("#tempmessage").addClass("panel-body");
+                $("#tempmessage").addClass(data.success ? "alert-success" : "alert-danger");
+                $("#tempmessage").html(data.message);
+            }).fail(function (jqXHR) {
+                alert(jqXHR.status + " : " + jqXHR.responseText);
+            });
+        }
+    });
+}
+
 function SetAddAjax(selector, url) {
     $(document).on('click', selector, function (event) {
         event.preventDefault();

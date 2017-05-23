@@ -2,25 +2,15 @@
 
 @{
     ViewData["Title"] = ViewData["Team"];
+    TempData["TeamId"] = Model.Team.Id;
 }
-
-@*<div class="panel-body">
-        @if (TempData[Constants.Message] != null)
-        {
-            bool error = false;
-            var obj = TempData[Constants.ErrorOccurred];
-            if (obj != null)
-            {
-                error = (bool)obj;
-            }
-            <div class="alert @(error ? "alert-danger" : "alert-success")">@TempData[Constants.Message]</div>
-        }
-    </div>*@
 
 <h2>@ViewData["Team"]</h2>
 
 <p>
-    <a asp-controller="Players" asp-action="Create">Dodaj igrača</a>
+    <a asp-controller="Players" asp-action="Create" class="btn btn-primary btn-sm">
+        <span class="glyphicon glyphicon-plus"></span> Dodaj novog igrača
+    </a>
 </p>
 <div class="container-fluid">
     <div class="row">
@@ -57,11 +47,6 @@
                                 @Html.DisplayFor(modelItem => item.NaturalPosition)
                             </td>
                             <td>
-                                <a asp-controller="Players" asp-action="Edit" asp-route-id="@item.Id">
-                                    <button class="btn btn-primary btn-xs" type="submit" title="uredi">
-                                        <span class="glyphicon glyphicon-edit"></span>
-                                    </button>
-                                </a>
                                 @*<form asp-controller="Players" asp-action="Edit" asp-route-id="@item.Id" method="get">
                                         <button class="btn btn-primary btn-xs" type="submit" title="uredi">
                                             <span class="glyphicon glyphicon-edit"></span>
@@ -70,10 +55,15 @@
                             </td>
                             <td>
                                 <form asp-controller="Players" asp-action="Delete" method="post">
-                                    <input type="hidden" name="id" value="@item.Id" />
-                                    <button class="btn btn-danger btn-xs del" type="submit" title="obriši">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </button>
+                                    <div class="btn-group">
+                                        <a  class="btn btn-warning btn-xs" asp-controller="Players" asp-action="Edit" asp-route-id="@item.Id">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </a>
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button class="btn btn-danger btn-xs del" type="submit" title="obriši">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </div>
                                 </form>
                             </td>
                         </tr>
@@ -85,54 +75,80 @@
         <br />
         <div class="smalltable col-xs-12 col-sm-12 col-md-5 col-lg-5">
             <div class="smalltable">
-                <div><b>Utakmice</b></div>
+                <div>
+                    <a asp-controller="Matches" asp-action="Index" asp-route-id="@Model.Team.Id" class="pull-right">
+                        <span class="glyphicon glyphicon-link"></span> Sve utakmice
+                    </a>
+                    <b>Utakmice</b>
+                </div>
                 <table class="table table-responsive">
                     <tbody class="text-center">
-                    @foreach (var item in Model.Matches)
-                    {
-                        <tr>
-                        @if (item.Team1Id == Model.Team.Id)
+                        @foreach (var item in Model.Matches)
                         {
-                            <td title="doma">D</td>
-                            <td class="playerlink">
-                                <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id">
-                                    @Html.DisplayFor(model => item.Team2.Name)
-                                </a>
-                            </td>
-                            @if (item.Played)
-                            {
-                                <td>
-                                    @item.MatchScore.Score1 : @item.MatchScore.Score2
+                            <tr class="@(item.Played ? "gray" : "")">
+                                @if (item.Team1Id == Model.Team.Id)
+                                {
+                                    <td title="doma">D</td>
+                                    <td class="playerlink">
+                                        <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id">
+                                            @Html.DisplayFor(model => item.Team2.ShortName)
+                                        </a>
+                                    </td>
+                                    @if (item.Played)
+                                    {
+                                        <td>
+                                            @item.MatchScore.Score1 : @item.MatchScore.Score2
+                                        </td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td title="u gostima">G</td>
+                                    <td class="playerlink">
+                                        <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id">
+                                            @Html.DisplayFor(model => item.Team1.ShortName)
+                                        </a>
+                                    </td>
+                                    @if (item.Played)
+                                    {
+                                        <td>
+                                            @item.MatchScore.Score2 : @item.MatchScore.Score1
+                                        </td>
+                                    }
+                                }
+                                @if (!item.Played)
+                                {
+                                    <td>: - :</td>
+                                }
+                                <td title="Natjecanje">
+                                    @item.Competition.ShortName
                                 </td>
-                            }
-                        }
-                        else
-                        {
-                            <td title="u gostima">G</td>
-                            <td class="playerlink">
-                                <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id">
-                                    @Html.DisplayFor(model => item.Team1.Name)
-                                </a>
-                            </td>
-                            @if (item.Played)
-                            {
                                 <td>
-                                    @item.MatchScore.Score2 : @item.MatchScore.Score1
+                                    @Html.DisplayFor(model => item.Date)
                                 </td>
-                            }
+                            </tr>
                         }
-                        @if (!item.Played)
+                    </tbody>
+                </table>
+            </div>
+            <div class="smalltable">
+                <div>
+                    <a asp-controller="Trainings" asp-action="Index" asp-route-id="@Model.Team.Id" class="pull-right">
+                        <span class="glyphicon glyphicon-link"></span> Svi treninzi
+                    </a>
+                    <b>Treninzi</b>
+                    <a asp-controller="Trainings" asp-action="Create" title="Dodaj trening">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+                <table class="table table-responsive">
+                    <tbody>
+                        @foreach (var item in Model.Trainings)
                         {
-                            <td>:-:</td>
+                            <tr class="@(item.Date.Date > DateTime.Now.Date ? "gray" : "")">
+                                <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                            </tr>
                         }
-                            <td>
-                                @item.Competition.ShortName
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.Date)
-                            </td>
-                        </tr>
-                    }
                     </tbody>
                 </table>
             </div>

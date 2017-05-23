@@ -31,10 +31,11 @@ namespace FootballCoachOnline.Controllers
                                                .Include(m => m.Competition)
                                                .Include(m => m.MatchScore)
                                                .Include(m => m.Team1)
-                                               .Include(m => m.Team2);
+                                               .Include(m => m.Team2)
+                                               .OrderBy(m => m.Date);
             if(id != null)
             {
-                return View(applicationDbContext.Where(m => m.Team1Id == id || m.Team2Id == id).ToListAsync());
+                return View(await applicationDbContext.Where(m => m.Team1Id == id || m.Team2Id == id).ToListAsync());
             }
             return View(await applicationDbContext.ToListAsync());
         }
@@ -199,14 +200,32 @@ namespace FootballCoachOnline.Controllers
         }
 
         // POST: Matches/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteAjax(int id)
         {
             var match = await _context.Match.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Match.Remove(match);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                _context.Match.Remove(match);
+                await _context.SaveChangesAsync();
+
+                var result = new
+                {
+                    message = "Utakmica uspješno obrisana",
+                    success = true
+                };
+                return Json(result);
+            }
+            catch (Exception exc)
+            {
+                var result = new
+                {
+                    message = $"Pogreška pri brisanju lokacije: {exc.InnerException}",
+                    success = false
+                };
+                return Json(result);
+            }
         }
 
         private bool MatchExists(int id)
