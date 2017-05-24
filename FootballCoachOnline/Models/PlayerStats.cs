@@ -8,6 +8,7 @@ namespace FootballCoachOnline.Models
     {
         public int Id { get; set; }
         public int PlayerId { get; set; }
+        public int CompetitionId { get; set; }
 
         [Display(Name = "Tim")]
         public int TeamId { get; set; }
@@ -33,5 +34,8 @@ namespace FootballCoachOnline.Models
 
         [Display(Name = "Tim")]
         public virtual Team Team { get; set; }
+
+        [Display(Name = "Natjecanje")]
+        public virtual Competition Competition { get; set; }
     }
 }

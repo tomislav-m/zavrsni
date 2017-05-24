@@ -300,6 +300,16 @@ namespace FootballCoachOnline.Controllers
                     TeamId = id,
                     Year = DateTime.Now.Year
                 });
+                foreach(var player in team.PlayerTeam)
+                {
+                    _context.Add(new PlayerStats
+                    {
+                        TeamId = player.TeamId,
+                        PlayerId = player.PlayerId,
+                        Year = DateTime.Now,
+                        CompetitionId = competition.Id
+                    });
+                }
                 await _context.SaveChangesAsync();
 
                 TempData[Constants.Message] = $"Tim {team.Name} se uspješno pridružio natjecanju {competition.Name}";

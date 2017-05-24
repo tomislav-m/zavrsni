@@ -97,14 +97,18 @@ namespace FootballCoachOnline.Controllers
                     TeamId = player.TeamId
                 };
                 _context.Add(pt);
-                _context.Add(new PlayerStats
+                foreach (var c in team.TeamCompetition)
                 {
-                    Team = team,
-                    TeamId = player.TeamId,
-                    Player = player,
-                    PlayerId = player.Id,
-                    Year = DateTime.Now
-                });
+                    _context.Add(new PlayerStats
+                    {
+                        Team = team,
+                        TeamId = player.TeamId,
+                        Player = player,
+                        PlayerId = player.Id,
+                        Year = DateTime.Now,
+                        CompetitionId = c.CompetitionId
+                    });
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Teams", new { id = team.Id });
             }
