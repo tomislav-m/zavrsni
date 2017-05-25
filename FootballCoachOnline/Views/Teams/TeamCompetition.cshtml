@@ -11,12 +11,11 @@
     <a asp-action="Join" asp-route-id="@Model.Team.Id">Pridruži se natjecanju</a>
 </p>
 
-<form asp-controller="Teams" asp-action="Leave" method="post">
-    <input type="hidden" value="@Model.Team.Id" name="teamId"/>
-    <table class="table table-striped table" style="width:1%">
-        <tbody>
-            @foreach (var item in Model.Competitions)
-            {
+<table class="table table-striped table" style="width:1%">
+    <tbody>
+        @foreach (var item in Model.Competitions)
+        {
+            <form asp-controller="Teams" asp-action="Leave" method="post">
                 <tr>
                     <td style="white-space:nowrap">
                         <a asp-controller="Competitions" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>
@@ -26,12 +25,13 @@
                     </td>
                     <td>
                         <input type="hidden" value="@item.Id" name="competitionId" />
+                        <input type="hidden" value="@Model.Team.Id" name="teamId" />
                     </td>
                 </tr>
-            }
-        </tbody>
-    </table>
-</form>
+            </form>
+        }
+    </tbody>
+</table>
 
 @section Scripts {
 <script>

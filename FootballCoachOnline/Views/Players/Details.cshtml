@@ -1,7 +1,7 @@
 @model FootballCoachOnline.ViewModels.PlayerProfileViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @Model.Player.FullName;
 }
 
 <div id="tempmessage"></div>
@@ -17,13 +17,13 @@
                     <tbody>
                         <tr class="clickable" title="Kliknite za detalje tima">
                             <td>
-                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.TeamId">
-                                    <strong>@Html.DisplayNameFor(model => model.Stats.Team)</strong>
+                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.First().TeamId">
+                                    <strong>@Html.DisplayNameFor(model => model.Stats.First().Team)</strong>
                                 </a>
                             </td>
                             <td>
-                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.TeamId">
-                                    @Html.DisplayFor(model => model.Stats.Team.Name)
+                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.First().TeamId">
+                                    @Html.DisplayFor(model => model.Stats.First().Team.Name)
                                 </a>
                             </td>
                         </tr>
@@ -77,47 +77,72 @@
         <div class="col-md-8">
             <div class="details">
                 <div class="title">Statistika</div>
-                <table class="table table-condensed">
+                <table class="table table-condensed headcenter" style="table-layout: fixed">
+                    <thead>
+                    <tr class="text-center">
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => Model.Stats.First().Apps)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => Model.Stats.First().Goals)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => Model.Stats.First().YellowCards)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => Model.Stats.First().RedCards)
+                        </th>
+                    </tr>
+                    </thead>
                     <tbody>
+                    @foreach (var item in Model.Stats)
+                    {
                         <tr>
-                            <td>
-                                <strong>@Html.DisplayNameFor(model => model.Stats.Apps)</strong>
+                            <td title="Natjecanje" style="text-align: left">
+                                <strong class="playerlink">
+                                    <a asp-controller="Competitions" asp-action="Details" asp-route-id="@item.CompetitionId">
+                                        @Html.DisplayFor(model => item.Competition.ShortName)
+                                    </a>
+                                </strong>
                             </td>
-                            <td>
-                                @Html.DisplayFor(model => model.Stats.Apps) (@Html.DisplayFor(model => model.Stats.Subs))
+                            <td title="zamjene">
+                                @Html.DisplayFor(model => item.Apps) (@Html.DisplayFor(model => item.Subs))
                             </td>
-                        </tr>
-                        <tr>
                             @if (Model.Player.NaturalPosition == Player.Position.golman)
                             {
-                                <td>
-                                    <strong>@Html.DisplayNameFor(model => model.Stats.GoalsConceded)</strong>
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(model => model.Stats.GoalsConceded)
-                                    <span title="zabijeni golovi">(@Html.DisplayFor(model => model.Stats.Goals))</span>
+                                <td title="primjeni golovi">
+                                    @Html.DisplayFor(model => item.GoalsConceded)
+                                    <span title="zabijeni golovi">(@Html.DisplayFor(model => item.Goals))</span>
                                 </td>
                             }
                             else
                             {
                                 <td>
-                                    <strong>@Html.DisplayNameFor(model => model.Stats.Goals)</strong>
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(model => model.Stats.Goals)
+                                    @Html.DisplayFor(model => item.Goals)
                                 </td>
                             }
-                            
+                            <td>
+                                @Html.DisplayFor(model => item.YellowCards)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.RedCards)
+                            </td>
                         </tr>
+                    }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Player.Id">Edit</a> |
-    <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.TeamId">Back to List</a>
+</div><br />
+<div class="btn-group">
+    <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.First().TeamId" class="btn btn-default">
+        <span class="glyphicon glyphicon-backward"></span> Natrag na tim
+    </a>
+    <a asp-action="Edit" asp-route-id="@Model.Player.Id" class="btn btn-default">
+        <span class="glyphicon glyphicon-edit"></span> Uredi
+    </a>
 </div>
 
 @section Scripts {

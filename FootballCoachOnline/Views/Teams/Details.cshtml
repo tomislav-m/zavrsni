@@ -94,7 +94,7 @@
                                             @Html.DisplayFor(model => item.Team2.ShortName)
                                         </a>
                                     </td>
-                                    @if (item.Played)
+                                    if (item.Played)
                                     {
                                         <td>
                                             @item.MatchScore.Score1 : @item.MatchScore.Score2
@@ -109,7 +109,7 @@
                                             @Html.DisplayFor(model => item.Team1.ShortName)
                                         </a>
                                     </td>
-                                    @if (item.Played)
+                                    if (item.Played)
                                     {
                                         <td>
                                             @item.MatchScore.Score2 : @item.MatchScore.Score1

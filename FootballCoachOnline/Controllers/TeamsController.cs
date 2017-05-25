@@ -123,7 +123,7 @@ namespace FootballCoachOnline.Controllers
                     _context.Add(team);
                     await _context.SaveChangesAsync();
 
-                    TempData[Constants.Message] = $"Ekipa {team.Name} uspjeöno dodana.";
+                    TempData[Constants.Message] = $"Ekipa {team.Name} uspjeÔøΩno dodana.";
                     TempData[Constants.ErrorOccurred] = false;
 
                     return RedirectToAction("Index");
@@ -131,7 +131,7 @@ namespace FootballCoachOnline.Controllers
                 catch(Exception exc)
                 {
                     ModelState.AddModelError(string.Empty, exc.ToString());
-                    TempData[Constants.Message] = "Pogreöka u dodavanju tima";
+                    TempData[Constants.Message] = "PogreÔøΩka u dodavanju tima";
                     TempData[Constants.ErrorOccurred] = false;
                 }
             }
@@ -284,7 +284,7 @@ namespace FootballCoachOnline.Controllers
             }
             try
             {
-                var team = await _context.Team.SingleOrDefaultAsync(t => t.Id == id);
+                var team = await _context.Team.Include(t => t.PlayerTeam).SingleOrDefaultAsync(t => t.Id == id);
                 var competition = await _context.Competition.SingleOrDefaultAsync(c => c.Id == competitionId);
 
                 _context.TeamCompetition.Add(new TeamCompetition
@@ -302,6 +302,12 @@ namespace FootballCoachOnline.Controllers
                 });
                 foreach(var player in team.PlayerTeam)
                 {
+                    var playerStats = _context.PlayerStats
+                        .SingleOrDefault(p => p.CompetitionId == competitionId && p.TeamId == team.Id && p.PlayerId == player.PlayerId && p.Year == DateTime.Now);
+                    if (playerStats != null)
+                    {
+                        continue;
+                    }
                     _context.Add(new PlayerStats
                     {
                         TeamId = player.TeamId,
@@ -312,13 +318,13 @@ namespace FootballCoachOnline.Controllers
                 }
                 await _context.SaveChangesAsync();
 
-                TempData[Constants.Message] = $"Tim {team.Name} se uspjeöno pridruûio natjecanju {competition.Name}";
+                TempData[Constants.Message] = $"Tim {team.Name} se uspje≈°no pridru≈æio natjecanju {competition.Name}";
                 TempData[Constants.ErrorOccurred] = false;
             }
             catch(Exception exc)
             {
                 ModelState.AddModelError(string.Empty, exc.ToString());
-                TempData[Constants.Message] = "Pogreöka u pridruûivanju natjecanju.";
+                TempData[Constants.Message] = "Pogre≈°ka u pridru≈æivanju natjecanju.";
                 TempData[Constants.ErrorOccurred] = false;
             }
 
@@ -374,14 +380,14 @@ namespace FootballCoachOnline.Controllers
                         _context.TeamCompetition.Remove(teamcompetiton);
                         await _context.SaveChangesAsync();
 
-                        TempData[Constants.Message] = $"Tim je uspjeöno napustio natjecanje";
+                        TempData[Constants.Message] = "Tim je uspje≈°no napustio natjecanje";
                         TempData[Constants.ErrorOccurred] = false;
                     }
                 }
                 catch(Exception exc)
                 {
                     ModelState.AddModelError(string.Empty, exc.ToString());
-                    TempData[Constants.Message] = "Pogreöka u napuötanju natjecanja.";
+                    TempData[Constants.Message] = "Pogre≈°ka u napu≈°tanju natjecanja.";
                     TempData[Constants.ErrorOccurred] = false;
                 }
                 return RedirectToAction("TeamCompetition", new { id = teamId });

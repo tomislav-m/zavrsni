@@ -63,9 +63,9 @@
         </div>
 
         <br />
-        <div class="smalltable matches col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="smalltable details col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <div>
-                <div><b>Utakmice</b></div>
+                <div class="title">Utakmice</div>
                 <div class="scroll">
                     @foreach (var x in Model.Matches)
                     {
@@ -158,16 +158,16 @@
             $('.next').show();
 
             var a = $('.next').attr('id').split(' ')[0];
-            $('#' + a).removeClass('btn-primary');
-            $('#' + a).addClass('btn-primary');
+            $('#' + a).removeClass('btn-danger');
+            $('#' + a).addClass('btn-danger');
             selected = a;
         });
 
         jQuery(".match").click(function () {
             var id = jQuery(this).attr("id");
-            $('#' + selected).removeClass('btn-primary');
+            $('#' + selected).removeClass('btn-danger');
             if (selected != id) {
-                $('#' + id).addClass('btn-primary');
+                $('#' + id).addClass('btn-danger');
                 selected = id;
             }
             else {

@@ -461,7 +461,7 @@ namespace FootballCoachOnline.Controllers
                         YellowCard = yellowCard,
                         TeamId = teamId,
                         MatchId = matchId,
-                        PlayerId = playerId,
+                        PlayerId = playerId
                     };
 
                     _context.MatchStats.Add(matchStats);
@@ -477,6 +477,39 @@ namespace FootballCoachOnline.Controllers
 
                     _context.Update(matchStatsOld);
                 }
+
+                var playerStats = _context.PlayerStats.SingleOrDefault(p => p.PlayerId == playerId);
+                if (playerStats == null)
+                {
+                    var match = _context.Match.SingleOrDefault(m => m.Id == matchId);
+                    playerStats = new PlayerStats
+                    {
+                        PlayerId = playerId,
+                        CompetitionId = match.CompetitionId.GetValueOrDefault(),
+                        TeamId = teamId,
+                        Year = DateTime.Now
+                    };
+                    _context.PlayerStats.Add(playerStats);
+                }
+                if (app)
+                {
+                    playerStats.Apps++;
+                }
+                if (sub)
+                {
+                    playerStats.Subs++;
+                }
+                if (yellowCard)
+                {
+                    playerStats.YellowCards++;
+                }
+                if (redCard)
+                {
+                    playerStats.RedCards++;
+                }
+                playerStats.Goals += goals;
+                playerStats.GoalsConceded += concededGoals;
+                _context.PlayerStats.Update(playerStats);
 
                 await _context.SaveChangesAsync();
 

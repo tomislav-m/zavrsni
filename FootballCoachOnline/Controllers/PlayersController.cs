@@ -42,10 +42,12 @@ namespace FootballCoachOnline.Controllers
             }
 
             var player = await _context.Player.SingleOrDefaultAsync(m => m.Id == id);
-            var stats = await _context.PlayerStats
+            var stats = _context.PlayerStats
                 .Where(s => s.PlayerId == id && s.Year.Year == year)
                 .Include(s => s.Team)
-                .SingleOrDefaultAsync();
+                .Include(s => s.Competition)
+                .OrderBy(s => s.Competition.Name)
+                .ToList();
 
             if (player == null)
             {
@@ -81,7 +83,7 @@ namespace FootballCoachOnline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TeamId,Name,Surname,DateOfBirth,PlaceOfBirth,Nationality,NaturalPosition,Physical,Role")] Player player)
         {
-            var team = await _context.Team.SingleOrDefaultAsync(t => t.Id == player.TeamId);
+            var team = await _context.Team.Include(t => t.TeamCompetition).SingleOrDefaultAsync(t => t.Id == player.TeamId);
             if(_userManager.GetUserId(User) != team.CoachId)
             {
                 return RedirectToAction("AccessDenied", "Account", "");
@@ -189,7 +191,7 @@ namespace FootballCoachOnline.Controllers
                     _context.SaveChanges();
                     var result = new
                     {
-                        message = $"Igraè {player.Name} {player.Surname} ažuriran.",
+                        message = $"Igraï¿½ {player.Name} {player.Surname} aï¿½uriran.",
                         success = true
                     };
                     return Json(result);
@@ -198,7 +200,7 @@ namespace FootballCoachOnline.Controllers
                 {
                     var result = new
                     {
-                        message = $"Pogreška pri ažuriranju: + {exc.InnerException}",
+                        message = $"Pogreï¿½ka pri aï¿½uriranju: + {exc.InnerException}",
                         success = false
                     };
                     return Json(result);

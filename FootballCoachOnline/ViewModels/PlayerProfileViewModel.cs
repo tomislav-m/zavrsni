@@ -9,6 +9,6 @@ namespace FootballCoachOnline.ViewModels
     public class PlayerProfileViewModel
     {
         public Player Player { get; set; }
-        public PlayerStats Stats { get; set; }
+        public List<PlayerStats> Stats { get; set; }
     }
 }
