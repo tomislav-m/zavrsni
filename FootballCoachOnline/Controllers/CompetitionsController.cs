@@ -191,5 +191,37 @@ namespace FootballCoachOnline.Controllers
         {
             return _context.Competition.Any(e => e.Id == id);
         }
+        
+        public IActionResult GetTable(int id)
+        {
+            var competition = _context.Competition.SingleOrDefault(c => c.Id == id);
+            if (competition == null)
+            {
+                return NotFound();
+            }
+            
+            List<object> list = new List<object>();
+            
+            var stats = _context.TeamStats.Include(ts => ts.Team).Where(ts => ts.CompetitionId == id).ToList();
+
+            foreach(var item in stats.OrderByDescending(s => s.Wins*3 + s.Draws))
+            {
+                var points = item.Wins * 3 + item.Draws;
+                var result = new
+                {
+                    klub = item.Team.ShortName,
+                    utakmice = item.GamesPlayed,
+                    pobjede = item.Wins,
+                    neriješene = item.Draws,
+                    izgubljene = item.Losses,
+                    zabijeno = item.GoalsScored,
+                    primljeno = item.GoalsConceded,
+                    bodovi = points
+                };
+                list.Add(result);
+            }
+
+            return Json(list);
+        }
     }
 }
