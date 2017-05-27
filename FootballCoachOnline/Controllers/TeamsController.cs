@@ -123,7 +123,7 @@ namespace FootballCoachOnline.Controllers
                     _context.Add(team);
                     await _context.SaveChangesAsync();
 
-                    TempData[Constants.Message] = $"Ekipa {team.Name} uspje�no dodana.";
+                    TempData[Constants.Message] = $"Ekipa {team.Name} uspješno dodana.";
                     TempData[Constants.ErrorOccurred] = false;
 
                     return RedirectToAction("Index");
@@ -131,7 +131,7 @@ namespace FootballCoachOnline.Controllers
                 catch(Exception exc)
                 {
                     ModelState.AddModelError(string.Empty, exc.ToString());
-                    TempData[Constants.Message] = "Pogre�ka u dodavanju tima";
+                    TempData[Constants.Message] = "Pogreška u dodavanju tima";
                     TempData[Constants.ErrorOccurred] = false;
                 }
             }

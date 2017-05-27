@@ -191,7 +191,7 @@ namespace FootballCoachOnline.Controllers
                     _context.SaveChanges();
                     var result = new
                     {
-                        message = $"Igra� {player.Name} {player.Surname} a�uriran.",
+                        message = $"Igrač {player.Name} {player.Surname} ažuriran.",
                         success = true
                     };
                     return Json(result);
@@ -200,7 +200,7 @@ namespace FootballCoachOnline.Controllers
                 {
                     var result = new
                     {
-                        message = $"Pogre�ka pri a�uriranju: + {exc.InnerException}",
+                        message = $"Pogreška pri ažuriranju: + {exc.InnerException}",
                         success = false
                     };
                     return Json(result);
