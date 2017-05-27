@@ -23,15 +23,18 @@ namespace FootballCoachOnline.Models
         public int ClubId { get; set; }
 
         [Display(Name = "Ime")]
-        [Required]
+        [Required(ErrorMessage = "Unos imena je obavezan")]
+        [StringLength(40, ErrorMessage = "Dužina imena smije biti najviše 40 znakova")]
         public string Name { get; set; }
 
         [Display(Name = "Uzrast")]
-        [Required]
+        [Required(ErrorMessage = "Unos uzrasta je obavezan")]
+        [StringLength(15, ErrorMessage = "Dužina naziva uzrasta smije biti najviše 15 znakova")]
         public string Age { get; set; }
 
         [Display(Name = "Skraćenica")]
-        [Required]
+        [Required(ErrorMessage = "Unos skraćenice je obavezan")]
+        [StringLength(15, ErrorMessage = "Dužina skraćenice smije biti najviše 15 znakova")]
         public string ShortName { get; set; }
 
         public virtual ICollection<Match> MatchTeam1 { get; set; }

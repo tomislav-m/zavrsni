@@ -16,6 +16,7 @@ namespace FootballCoachOnline.Models
         public int Id { get; set; }
 
         [Display(Name = "Ime")]
+        [Required(ErrorMessage = "Unos imena je obavezan")]
         public string Name { get; set; }
 
         [Display(Name = "Skraćenica")]
