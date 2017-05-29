@@ -73,9 +73,22 @@ namespace FootballCoachOnline.Controllers
         // GET: Matches/Create
         public IActionResult Create(int id)
         {
+            var competition = _context.Competition.SingleOrDefault(c => c.Id == id);
+            if(competition == null)
+            {
+                return NotFound();
+            }
+
             ViewData["CompetitionId"] = id;
-            ViewData["Team1Id"] = new SelectList(_context.Team.OrderBy(t => t.Name), "Id", "Name");
-            ViewData["Team2Id"] = new SelectList(_context.Team.OrderBy(t => t.Name), "Id", "Name");
+            ViewData["CompetitionName"] = competition.Name;
+            var teams = _context.Competition
+                .Include(t => t.TeamCompetition)
+                .ThenInclude(t => t.Team)
+                .SingleOrDefault(c => c.Id == id)
+                .TeamCompetition.Select(t => t.Team);
+
+            ViewData["Team1Id"] = new SelectList(teams, "Id", "Name");
+            ViewData["Team2Id"] = new SelectList(teams, "Id", "Name");
             return View();
         }
 
@@ -478,10 +491,10 @@ namespace FootballCoachOnline.Controllers
                     _context.Update(matchStatsOld);
                 }
 
-                var playerStats = _context.PlayerStats.SingleOrDefault(p => p.PlayerId == playerId);
+                var match = _context.Match.SingleOrDefault(m => m.Id == matchId);
+                var playerStats = _context.PlayerStats.SingleOrDefault(p => p.PlayerId == playerId && p.CompetitionId == match.CompetitionId && p.Year == DateTime.Now);
                 if (playerStats == null)
                 {
-                    var match = _context.Match.SingleOrDefault(m => m.Id == matchId);
                     playerStats = new PlayerStats
                     {
                         PlayerId = playerId,
@@ -490,6 +503,7 @@ namespace FootballCoachOnline.Controllers
                         Year = DateTime.Now
                     };
                     _context.PlayerStats.Add(playerStats);
+                    await _context.SaveChangesAsync();
                 }
                 if (app)
                 {

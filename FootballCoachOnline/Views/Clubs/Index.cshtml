@@ -1,28 +1,25 @@
 @model IEnumerable<FootballCoachOnline.Models.Club>
 
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 @{
     ViewData["Title"] = "Klubovi";
 }
 
-@*<div class="panel-body">
-    @if (TempData[Constants.Message] != null)
-    {
-        bool error = false;
-        var obj = TempData[Constants.ErrorOccurred];
-        if (obj != null)
-        {
-            error = (bool)obj;
-        }
-        <div class="alert @(error ? "alert-danger" : "alert-success")">@TempData[Constants.Message]</div>
-    }
-</div>*@
-
 <h2>Klubovi</h2>
 
 <p>
-    <a asp-action="Create">Dodaj klub</a>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <a asp-action="Create" class="btn btn-primary btn-sm">
+            <span class="glyphicon glyphicon-plus"></span> Dodaj klub
+        </a>
+    }
 </p>
-<table id="myTable" class="table tablesorter">
+<table id="myTable" class="table table-condensed tablesorter">
     <thead>
         <tr>
             <th>
@@ -50,10 +47,8 @@
                 @Html.DisplayFor(modelItem => item.YearFounded)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Uredi</a> |
-                <a asp-controller="Teams" asp-action="Index" asp-route-id="@item.Id">Timovi</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">O klubu</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Obriši</a>
+                @*<a asp-action="Edit" asp-route-id="@item.Id">Uredi</a> |*@
+                <a asp-controller="Teams" asp-action="Index" asp-route-id="@item.Id">Timovi</a>
             </td>
         </tr>
 }

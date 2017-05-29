@@ -1,10 +1,10 @@
-@model FootballCoachOnline.Models.Player
+﻿@model FootballCoachOnline.Models.Player
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Uređivanje";
 }
 
-<h2>Edit</h2>
+<h2>Uređivanje</h2>
 
 <form asp-action="Edit">
     <div class="form-horizontal">
@@ -69,13 +69,6 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Role" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Role" class="form-control" />
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
@@ -84,7 +77,9 @@
 </form>
 
 <div>
-    <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.TeamId">Back to List</a>
+    <a asp-controller="Teams" asp-action="Details" asp-route-id="@ViewBag.TeamId" class="btn btn-default">
+        <span class="glyphicon glyphicon-backward"></span> Natrag na tim
+    </a>
 </div>
 
 @section Scripts {

@@ -204,11 +204,14 @@ namespace FootballCoachOnline.Controllers
             
             var stats = _context.TeamStats.Include(ts => ts.Team).Where(ts => ts.CompetitionId == id).ToList();
 
+            int i = 1;
             foreach(var item in stats.OrderByDescending(s => s.Wins*3 + s.Draws))
             {
+                string diff = (item.GoalsScored - item.GoalsConceded > 0 ? "+" + (item.GoalsScored - item.GoalsConceded) : (item.GoalsScored - item.GoalsConceded).ToString());
                 var points = item.Wins * 3 + item.Draws;
                 var result = new
                 {
+                    pozicija = i++,
                     klub = item.Team.ShortName,
                     utakmice = item.GamesPlayed,
                     pobjede = item.Wins,
@@ -216,6 +219,7 @@ namespace FootballCoachOnline.Controllers
                     izgubljene = item.Losses,
                     zabijeno = item.GoalsScored,
                     primljeno = item.GoalsConceded,
+                    razlika = diff,
                     bodovi = points
                 };
                 list.Add(result);

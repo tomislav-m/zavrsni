@@ -8,9 +8,14 @@
 <h2>@ViewData["Team"]</h2>
 
 <p>
-    <a asp-controller="Players" asp-action="Create" class="btn btn-primary btn-sm">
-        <span class="glyphicon glyphicon-plus"></span> Dodaj novog igrača
-    </a>
+    <div class="btn-group">
+        <a asp-controller="Players" asp-action="Create" class="btn btn-primary btn-sm">
+            <span class="glyphicon glyphicon-plus"></span> Dodaj novog igrača
+        </a>
+        <a asp-controller="Teams" asp-action="Edit" asp-route-id="@Model.Team.Id" class="btn btn-primary btn-sm">
+            <span class="glyphicon glyphicon-edit"></span> Uredi
+        </a>
+    </div>
 </p>
 <div class="container-fluid">
     <div class="row">

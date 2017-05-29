@@ -45,6 +45,7 @@ namespace FootballCoachOnline.Controllers
             return View(club);
         }
 
+        [Authorize]
         // GET: Clubs/Create
         public IActionResult Create()
         {
@@ -54,6 +55,7 @@ namespace FootballCoachOnline.Controllers
         // POST: Clubs/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Nickname,YearFounded")] Club club)
