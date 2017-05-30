@@ -1,14 +1,13 @@
 @model FootballCoachOnline.Models.Training
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Dodaj trening";
 }
 
-<h2>Create</h2>
+<h2>Dodaj trening</h2>
 
 <form asp-action="Create">
     <div class="form-horizontal">
-        <h4>Training</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
@@ -40,6 +39,8 @@
 </form>
 
 <div>
-    <a asp-controller="Teams" asp-action="Details" asp-route-id="@ViewBag.TeamId">Povratak na tim</a>
+    <a asp-controller="Teams" asp-action="Details" asp-route-id="@ViewBag.TeamId" class="btn btn-default">
+        <span class="glyphicon glyphicon-backward"></span> Treninzi
+    </a>
 </div>
 

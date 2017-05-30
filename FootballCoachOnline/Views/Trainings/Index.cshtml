@@ -1,23 +1,25 @@
 @model IEnumerable<FootballCoachOnline.Models.Training>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Treninzi";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.TeamName - Treninzi</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a  asp-action="Create" class="btn btn-primary btn-sm">
+        <span class="glyphicon glyphicon-plus"></span> Dodaj novi trening
+    </a>
 </p>
-<table class="table">
+<table class="table table-condensed">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Team)
             </th>
@@ -25,7 +27,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.OrderBy(t => t.Date)) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
@@ -34,12 +36,20 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Team.Age)
+                @Html.DisplayFor(modelItem => item.Team.Name) - @Html.DisplayFor(modelItem => item.Team.Age)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <div class="btn-group">
+                    <a class="btn btn-info btn-xs" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                    </a>
+                    <a class="btn btn-warning btn-xs" asp-action="Edit" asp-route-id="@item.Id" title="Uredi">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                    <a class="btn btn-danger btn-xs deleteajax" data-id="@item.Id" title="Obriši">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
             </td>
         </tr>
 }

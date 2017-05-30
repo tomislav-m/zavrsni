@@ -28,6 +28,7 @@ namespace FootballCoachOnline.Controllers
             var applicationDbContext = _context.Training.Include(t => t.Team);
             if(id != null)
             {
+                ViewData["TeamName"] = _context.Team.SingleOrDefault(t => t.Id == id).Name;
                 return View(await applicationDbContext.Where(t => t.TeamId == id).ToListAsync());
             }
             return View(await applicationDbContext.ToListAsync());
