@@ -462,6 +462,52 @@ namespace FootballCoachOnline.Controllers
             try
             {
                 var matchStatsOld = _context.MatchStats.SingleOrDefault(m => m.PlayerId == playerId && m.MatchId == matchId);
+                var match = _context.Match.SingleOrDefault(m => m.Id == matchId);
+                var playerStats = _context.PlayerStats.SingleOrDefault(p => p.PlayerId == playerId && p.CompetitionId == match.CompetitionId && p.Year.Year == DateTime.Now.Year);
+                if (playerStats == null)
+                {
+                    playerStats = new PlayerStats
+                    {
+                        PlayerId = playerId,
+                        CompetitionId = match.CompetitionId.GetValueOrDefault(),
+                        TeamId = teamId,
+                        Year = DateTime.Now
+                    };
+                    _context.PlayerStats.Add(playerStats);
+                    await _context.SaveChangesAsync();
+                }
+                if (matchStatsOld != null)
+                {
+                    if (matchStatsOld.App) playerStats.Apps--;
+                    if (matchStatsOld.Sub) playerStats.Subs--;
+                    if (matchStatsOld.YellowCard) playerStats.YellowCards--;
+                    if (matchStatsOld.RedCard) playerStats.RedCards--;
+                    playerStats.Goals -= matchStatsOld.Goals;
+                    playerStats.GoalsConceded -= matchStatsOld.GoalsConceded.GetValueOrDefault();
+                }
+
+                if (app)
+                {
+                    playerStats.Apps++;
+                }
+                if (sub)
+                {
+                    playerStats.Subs++;
+                }
+                if (yellowCard)
+                {
+                    playerStats.YellowCards++;
+                }
+                if (redCard)
+                {
+                    playerStats.RedCards++;
+                }
+                playerStats.Goals += goals;
+                playerStats.GoalsConceded += concededGoals;
+                _context.PlayerStats.Update(playerStats);
+
+
+
                 if (matchStatsOld == null)
                 {
                     var matchStats = new MatchStats
@@ -491,40 +537,6 @@ namespace FootballCoachOnline.Controllers
                     _context.Update(matchStatsOld);
                 }
 
-                var match = _context.Match.SingleOrDefault(m => m.Id == matchId);
-                var playerStats = _context.PlayerStats.SingleOrDefault(p => p.PlayerId == playerId && p.CompetitionId == match.CompetitionId && p.Year == DateTime.Now);
-                if (playerStats == null)
-                {
-                    playerStats = new PlayerStats
-                    {
-                        PlayerId = playerId,
-                        CompetitionId = match.CompetitionId.GetValueOrDefault(),
-                        TeamId = teamId,
-                        Year = DateTime.Now
-                    };
-                    _context.PlayerStats.Add(playerStats);
-                    await _context.SaveChangesAsync();
-                }
-                if (app)
-                {
-                    playerStats.Apps++;
-                }
-                if (sub)
-                {
-                    playerStats.Subs++;
-                }
-                if (yellowCard)
-                {
-                    playerStats.YellowCards++;
-                }
-                if (redCard)
-                {
-                    playerStats.RedCards++;
-                }
-                playerStats.Goals += goals;
-                playerStats.GoalsConceded += concededGoals;
-                _context.PlayerStats.Update(playerStats);
-
                 await _context.SaveChangesAsync();
 
                 var result = new
@@ -534,7 +546,7 @@ namespace FootballCoachOnline.Controllers
                 };
                 return Json(result);
             }
-            catch(Exception exc)
+            catch(Exception )
             {
                 var result = new
                 {
@@ -543,6 +555,51 @@ namespace FootballCoachOnline.Controllers
                 };
                 return Json(result);
             }
+        }
+
+        [HttpPost]
+        public IActionResult RemovePlayer(int playerId, int matchId)
+        {
+            var player = _context.Player.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                var matchStats = _context.MatchStats.Include(m => m.Match)
+                    .SingleOrDefault(m => m.MatchId == matchId && m.PlayerId == playerId);
+                if (matchStats == null)
+                {
+                    return NotFound();
+                }
+
+                var playerStats = _context.PlayerStats
+                    .SingleOrDefault(p => p.PlayerId == playerId && p.CompetitionId == matchStats.Match.CompetitionId &&
+                                          p.Year.Year == matchStats.Match.Date.Year);
+
+                if (matchStats.App) playerStats.Apps--;
+                if (matchStats.Sub) playerStats.Subs--;
+                if (matchStats.YellowCard) playerStats.YellowCards--;
+                if (matchStats.RedCard) playerStats.RedCards--;
+                playerStats.Goals -= matchStats.Goals;
+                playerStats.GoalsConceded -= matchStats.GoalsConceded.GetValueOrDefault();
+
+                _context.PlayerStats.Update(playerStats);
+                _context.MatchStats.Remove(matchStats);
+                _context.SaveChanges();
+
+                TempData[Constants.Message] = $"Igrač {player.FullName} uspješno obrisan.";
+                TempData[Constants.ErrorOccurred] = false;
+            }
+            catch (Exception exc)
+            {
+                ModelState.AddModelError(string.Empty, exc.ToString());
+                TempData[Constants.Message] = $"Pogreška u brisanju igrača {player.FullName}";
+                TempData[Constants.ErrorOccurred] = true;
+            }
+
+            return RedirectToAction("Details", new { id = matchId });
         }
     }
 }

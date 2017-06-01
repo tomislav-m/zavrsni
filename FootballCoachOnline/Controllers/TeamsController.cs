@@ -303,7 +303,7 @@ namespace FootballCoachOnline.Controllers
                 foreach(var player in team.PlayerTeam)
                 {
                     var playerStats = _context.PlayerStats
-                        .SingleOrDefault(p => p.CompetitionId == competitionId && p.TeamId == team.Id && p.PlayerId == player.PlayerId && p.Year == DateTime.Now);
+                        .SingleOrDefault(p => p.CompetitionId == competitionId && p.TeamId == team.Id && p.PlayerId == player.PlayerId && p.Year.Year == DateTime.Now.Year);
                     if (playerStats != null)
                     {
                         continue;
