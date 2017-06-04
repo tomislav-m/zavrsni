@@ -33,7 +33,6 @@
                             @Html.DisplayNameFor(model => model.Players.FirstOrDefault().NaturalPosition)
                         </th>
                         <th></th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,7 +40,7 @@
                     {
                         <tr>
                             <td class="playerlink">
-                                <a asp-controller="Players" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
+                                <a asp-controller="Players" asp-action="Details" asp-route-id="@item.Id" asp-route-teamId="@Model.Team.Id" title="Detalji">
                                     @Html.DisplayFor(modelItem => item.Name) @Html.DisplayFor(modelItem => item.Surname)
                                 </a>
                             </td>
@@ -50,13 +49,6 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.NaturalPosition)
-                            </td>
-                            <td>
-                                @*<form asp-controller="Players" asp-action="Edit" asp-route-id="@item.Id" method="get">
-                                        <button class="btn btn-primary btn-xs" type="submit" title="uredi">
-                                            <span class="glyphicon glyphicon-edit"></span>
-                                        </button>
-                                    </form>*@
                             </td>
                             <td>
                                 <form asp-controller="Players" asp-action="Delete" method="post">

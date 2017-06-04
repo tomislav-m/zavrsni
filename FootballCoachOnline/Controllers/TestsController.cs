@@ -5,16 +5,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FootballCoachOnline.Data;
 using FootballCoachOnline.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FootballCoachOnline.Controllers
 {
     public class TestsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TestsController(ApplicationDbContext context)
+        public TestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;    
+            _context = context;
+            _userManager = userManager;    
         }
 
         // GET: Tests
@@ -25,13 +28,9 @@ namespace FootballCoachOnline.Controllers
             {
                 return View(await applicationDbContext.ToListAsync());
             }
-            var tests = _context.PlayerTeam
-                .Where(t => t.TeamId == id)
-                .Include(p => p.Player)
-                .ThenInclude(t => t.Test)
-                .Select(p => p.Player)
-                .SelectMany(t => t.Test)
-                .ToList();
+            var players = _context.PlayerTeam.Where(t => t.TeamId == id).Select(p => p.PlayerId);
+            var tests = _context.Test.Where(t => players.Contains(t.PlayerId)).Include(p => p.Player);
+            ViewData["teamName"] = " - " + _context.Team.SingleOrDefault(t => t.Id == id).Name;
             
             return View(tests);
         }
@@ -56,15 +55,15 @@ namespace FootballCoachOnline.Controllers
         }
 
         // GET: Tests/Create
-        public IActionResult Create(int? id)
+        public IActionResult Create(int? playerId)
         {
-            var player = _context.Player.SingleOrDefault(p => p.Id == id);
-            if (player == null)
-            {
-                return NotFound();
-            }
+            var players = _context.Team.
+                Where(t => t.CoachId == _userManager.GetUserId(User))
+                .SelectMany(t => t.PlayerTeam)
+                .Select(t => t.Player);
             
-            ViewData["PlayerId"] = id;
+            ViewData["Players"] = new SelectList(players, "Id", "FullName", playerId.GetValueOrDefault());
+            ViewData["PlayerId"] = playerId;
             return View();
         }
 
@@ -73,13 +72,13 @@ namespace FootballCoachOnline.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PlayerId,Name,Description")] Test test)
+        public async Task<IActionResult> Create([Bind("Id,PlayerId,Name,Description,Date")] Test test)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(test);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Players", new {id = test.PlayerId});
             }
             ViewData["PlayerId"] = new SelectList(_context.Player, "Id", "Name", test.PlayerId);
             return View(test);
@@ -93,12 +92,11 @@ namespace FootballCoachOnline.Controllers
                 return NotFound();
             }
 
-            var test = await _context.Test.SingleOrDefaultAsync(m => m.Id == id);
+            var test = await _context.Test.Include(p => p.Player).SingleOrDefaultAsync(m => m.Id == id);
             if (test == null)
             {
                 return NotFound();
             }
-            ViewData["PlayerId"] = new SelectList(_context.Player, "Id", "Name", test.PlayerId);
             return View(test);
         }
 
@@ -107,7 +105,7 @@ namespace FootballCoachOnline.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PlayerId,Name,Description")] Test test)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PlayerId,Name,Description,Date")] Test test)
         {
             if (id != test.Id)
             {
@@ -132,9 +130,8 @@ namespace FootballCoachOnline.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Players", new {id = test.PlayerId});
             }
-            ViewData["PlayerId"] = new SelectList(_context.Player, "Id", "Name", test.PlayerId);
             return View(test);
         }
 

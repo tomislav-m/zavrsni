@@ -17,12 +17,12 @@
                     <tbody>
                         <tr class="clickable" title="Kliknite za detalje tima">
                             <td>
-                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.First().TeamId">
+                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.First().Team.Id">
                                     <strong>@Html.DisplayNameFor(model => model.Stats.First().Team)</strong>
                                 </a>
                             </td>
                             <td>
-                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.First().TeamId">
+                                <a asp-controller="Teams" asp-action="Details" asp-route-id="@Model.Stats.First().Team.Id">
                                     @Html.DisplayFor(model => model.Stats.First().Team.Name)
                                 </a>
                             </td>
@@ -76,6 +76,9 @@
         </div>
         <div class="col-md-8">
             <div class="details">
+                <div class="pull-right">
+                    <select id="reload" class="form-control" asp-items="@ViewBag.links"></select>
+                </div>
                 <div class="title">Statistika</div>
                 <table class="table table-condensed headcenter" style="table-layout: fixed">
                     <thead>
@@ -135,15 +138,21 @@
             </div>
             <br />
             <div class="details">
-                <a asp-controller="Tests" asp-action="Create" asp-route-id="@Model.Player.Id" class="pull-right">
-                    <span class="glyphicon glyphicon-plus-sign"></span> Novi test
+                <a asp-controller="Tests" asp-action="Index" asp-route-id="@ViewBag.teamId" class="pull-right">
+                    <span class="glyphicon glyphicon-link"></span> Svi testovi tima
                 </a>
-                <div class="title">Testovi</div>
-                <table class="table table-condensed headcenter">
+                <div class="title">Testovi
+                    <a asp-controller="Tests" asp-action="Create" asp-route-playerId="@Model.Player.Id" title="novi test">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+                <table class="table table-condensed headcenter" style="table-layout: fixed">
                     <thead>
                     <tr>
                         <th>@Html.DisplayNameFor(modelItem => Model.Tests.First().Name)</th>
                         <th>@Html.DisplayNameFor(modelItem => Model.Tests.First().Description)</th>
+                        <th>@Html.DisplayNameFor(modelItem => Model.Tests.First().Date)</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -152,6 +161,12 @@
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.Name)</td>
                             <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                            <td>
+                                <a asp-controller="Tests" asp-action="Edit" asp-route-id="@item.Id" class="btn-group-sm btn-default">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </a>
+                            </td>
                         </tr>
                     }
                     </tbody>
@@ -173,6 +188,13 @@
     <script type="text/javascript">
         $(function () {
             SetEditAjax(".editajax", '@Url.Action("EditPhysical")','playerid');
+        });
+    </script>
+    
+    <script>
+        $("#reload").change(function () {
+            var location = this.value;
+            window.location = location;
         });
     </script>
 }

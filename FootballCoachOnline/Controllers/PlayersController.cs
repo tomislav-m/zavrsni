@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace FootballCoachOnline.Controllers
         }
 
         // GET: Players/Details/5
-        public async Task<IActionResult> Details(int? id, int? year)
+        public async Task<IActionResult> Details(int? id, int? year, int? teamId)
         {
             if (id == null)
             {
@@ -41,12 +42,46 @@ namespace FootballCoachOnline.Controllers
             }
 
             var player = await _context.Player.SingleOrDefaultAsync(m => m.Id == id);
-            var stats = _context.PlayerStats
-                .Where(s => s.PlayerId == id && s.Year.Year == year)
+            List<PlayerStats> stats;
+            if (teamId == null)
+            {
+                stats = _context.PlayerStats
+                    .Where(s => s.PlayerId == id && s.Year.Year == year)
+                    .Include(s => s.Team)
+                    .Include(s => s.Competition)
+                    .OrderBy(s => s.Competition.Name)
+                    .ToList();
+            }
+            else
+            {
+                stats = _context.PlayerStats
+                    .Where(s => s.PlayerId == id && s.Year.Year == year && s.TeamId == teamId)
+                    .Include(s => s.Team)
+                    .Include(s => s.Competition)
+                    .OrderBy(s => s.Competition.Name)
+                    .ToList();
+            }
+            if (!stats.Any())
+            {
+                stats.Add(new PlayerStats());
+            }
+            var allStats = _context.PlayerStats
+                .Where(s => s.PlayerId == id)
                 .Include(s => s.Team)
-                .Include(s => s.Competition)
-                .OrderBy(s => s.Competition.Name)
-                .ToList();
+                .GroupBy(s => new {s.Year.Year, s.TeamId});
+            var list = new List<object>();
+            foreach(var s in allStats)
+            {
+                var a = new
+                {
+                    link = Url.Action("Details", "Players", new { id, year = s.First().Year.Year, teamId = s.First().TeamId }),
+                    name = s.First().Team.ShortName + " - " + s.First().Year.Year
+                };
+                list.Add(a);
+            }
+            ViewData["links"] = new SelectList(list, "link", "name");
+            ViewData["teamId"] = teamId;
+            
             var tests = _context.Test.Where(t => t.PlayerId == id).ToList();
 
             if (player == null)

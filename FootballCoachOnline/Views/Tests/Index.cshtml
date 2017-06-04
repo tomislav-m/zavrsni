@@ -1,50 +1,57 @@
 @model IEnumerable<Test>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Testovi";
     var id = ViewContext.RouteData.Values["id"];
 }
 
-<h2>Index</h2>
+<h2>Testovi @ViewBag.teamName</h2>
 
 <p>
     <a asp-action="Create" asp-route-id="@id" class="btn btn-primary btn-sm">
         <span class="glyphicon glyphicon-plus"></span> Dodaj novi test
     </a>
 </p>
-<table class="table table-condensed">
+<table class="table table-condensed headcenter">
     <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Player)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Player.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+    </tr>
     </thead>
-    <tbody>
+    <tbody class="text-center">
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Player.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+    <tr>
+        <td class="playerlink">
+            <a asp-controller="Players" asp-action="Details" asp-route-id="@item.PlayerId">
+                @Html.DisplayFor(modelItem => item.Player.FullName)
+            </a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            <div class="btn-group">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-xs btn-primary">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-xs btn-danger">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            </div>
+        </td>
+    </tr>
 }
     </tbody>
 </table>
