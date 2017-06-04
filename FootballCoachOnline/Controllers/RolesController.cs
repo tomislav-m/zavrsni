@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
@@ -14,18 +12,18 @@ namespace FootballCoachOnline.Controllers
     [Authorize(Roles="Administrator")]
     public class RolesController : Controller
     {
-        private readonly RoleManager<ApplicationRole> roleManager;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
         {
-            this.roleManager = roleManager;
-            this.userManager = userManager;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
-            var roles = roleManager.Roles;
+            var roles = _roleManager.Roles;
             return View(roles);
         }
 
@@ -40,7 +38,7 @@ namespace FootballCoachOnline.Controllers
             if (ModelState.IsValid)
             {
                 var role = new ApplicationRole { Name = name, Description = description };
-                await roleManager.CreateAsync(role);
+                await _roleManager.CreateAsync(role);
 
                 return RedirectToAction("Index");
             }
@@ -52,20 +50,20 @@ namespace FootballCoachOnline.Controllers
         {
             UserRoleViewModel model = new UserRoleViewModel
             {
-                RoleList = new SelectList(roleManager.Roles, "Id", "Name"),
-                UserList = new SelectList(userManager.Users, "Id", "UserName")
+                RoleList = new SelectList(_roleManager.Roles, "Id", "Name"),
+                UserList = new SelectList(_userManager.Users, "Id", "UserName")
             };
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Join(string UserId, string RoleId)
+        public async Task<IActionResult> Join(string userId, string roleId)
         {
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByIdAsync(UserId);
-                var role = await roleManager.FindByIdAsync(RoleId);
-                await userManager.AddToRoleAsync(user, role.Name);
+                var user = await _userManager.FindByIdAsync(userId);
+                var role = await _roleManager.FindByIdAsync(roleId);
+                await _userManager.AddToRoleAsync(user, role.Name);
 
                 return RedirectToAction("Details", new { roleName = role.Name});
             }
@@ -80,7 +78,7 @@ namespace FootballCoachOnline.Controllers
                 return NotFound();
             }
 
-            var users = await userManager.GetUsersInRoleAsync(roleName);
+            var users = await _userManager.GetUsersInRoleAsync(roleName);
             ViewBag.Role = roleName;
 
             return View(users);
@@ -89,8 +87,8 @@ namespace FootballCoachOnline.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveFromRole(string role, string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
-            await userManager.RemoveFromRoleAsync(user, role);
+            var user = await _userManager.FindByIdAsync(userId);
+            await _userManager.RemoveFromRoleAsync(user, role);
 
             return RedirectToAction("Details", new { roleName = role });
         }

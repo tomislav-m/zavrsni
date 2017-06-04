@@ -1,7 +1,5 @@
 ﻿@model FootballCoachOnline.ViewModels.CompetitionStatsMatchesViewModel
 
-@using Microsoft.AspNetCore.Identity
-
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
@@ -133,31 +131,13 @@
             <h4 class="title">Najbolji strijelci</h4>
             <table class="table table-condensed text-center">
                 <tbody>
+                @foreach (var item in Model.Scorers)
+                {
                     <tr>
-                        <td>Ivan Horvat</td>
-                        <td>Klub</td>
-                        <td>3</td>
+                        <td>@item.Player.FullName</td>
+                        <td>@item.Goals</td>
                     </tr>
-                    <tr>
-                        <td>Miran Babić</td>
-                        <td>Vikinzi</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>Ivan Tulić</td>
-                        <td>Orlovi</td>
-                        <td>1</td>
-                    </tr>
-                    <tr>
-                        <td>Robert Horvat</td>
-                        <td>Dream Team</td>
-                        <td>1</td>
-                    </tr>
-                    <tr>
-                        <td>Ante Marić</td>
-                        <td>Tigrovi</td>
-                        <td>1</td>
-                    </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -165,32 +145,13 @@
             <h4 class="title">Žuti kartoni</h4>
             <table class="table table-condensed">
                 <tbody>
+                @foreach (var item in Model.Yellows)
+                {
                     <tr>
-                    <tr>
-                        <td>Sebastijan Murić</td>
-                        <td>Lavovi</td>
-                        <td>1</td>
+                        <td>@item.Player.FullName</td>
+                        <td>@item.YellowCards</td>
                     </tr>
-                    <tr>
-                        <td>Matej Mesić</td>
-                        <td>Tigrovi</td>
-                        <td>1</td>
-                    </tr>
-                    <tr>
-                        <td>Ivan Tulić</td>
-                        <td>Orlovi</td>
-                        <td>1</td>
-                    </tr>
-                    <tr>
-                        <td>Luka Kovač</td>
-                        <td>Vikinzi</td>
-                        <td>1</td>
-                    </tr>
-                    <tr>
-                        <td>Mirko Štimac</td>
-                        <td>Dream Team</td>
-                        <td>1</td>
-                    </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -198,11 +159,13 @@
             <h4 class="title">Crveni kartoni</h4>
             <table class="table table-condensed">
                 <tbody>
+                @foreach (var item in Model.Reds)
+                {
                     <tr>
-                        <td>Marino Šibić</td>
-                        <td>Lavovi</td>
-                        <td>1</td>
+                        <td>@item.Player.FullName</td>
+                        <td>@item.RedCards</td>
                     </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -234,7 +197,7 @@
                     // loop all tr elements and set the value for the first column  
                     $(table).find("tr td:first-child").each(function(index) {
                         $(this).text(index + 1);
-                    })
+                    });
                 }
             });
 
@@ -260,7 +223,7 @@
         jQuery(".match").click(function() {
             var id = jQuery(this).attr("id");
             $('#' + selected).removeClass('btn-danger');
-            if (selected != id) {
+            if (selected !== id) {
                 $('#' + id).addClass('btn-danger');
                 selected = id;
             } else {

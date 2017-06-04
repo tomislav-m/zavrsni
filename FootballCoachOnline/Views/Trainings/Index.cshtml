@@ -1,4 +1,4 @@
-@model IEnumerable<FootballCoachOnline.Models.Training>
+@model IEnumerable<Training>
 
 @{
     ViewData["Title"] = "Treninzi";
@@ -46,7 +46,7 @@
                     <a class="btn btn-warning btn-xs" asp-action="Edit" asp-route-id="@item.Id" title="Uredi">
                         <span class="glyphicon glyphicon-edit"></span>
                     </a>
-                    <a class="btn btn-danger btn-xs deleteajax" data-id="@item.Id" title="Obriši">
+                    <a class="btn btn-danger btn-xs deleteajax" data-id="@item.Id" title="Obriï¿½i">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </div>

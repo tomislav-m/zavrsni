@@ -164,7 +164,7 @@ namespace FootballCoachOnline.Controllers
             {
                 try
                 {
-                    MatchScore mc = _context.MatchScore.Where(m => m.Match == match).SingleOrDefault();
+                    MatchScore mc = _context.MatchScore.SingleOrDefault(m => m.Match == match);
                     if (match.Played && home != null && away != null)
                     {
                         mc.Score1 = home.GetValueOrDefault();
@@ -364,11 +364,9 @@ namespace FootballCoachOnline.Controllers
             var teams2 = new List<Team>();
             teams2.AddRange(teams);
 
-            bool flag = false;
-
             foreach(var t in teams.ToList())
             {
-                flag = false;
+                var flag = false;
                 foreach(var t2 in teams2)
                 {
                     foreach(var m in _context.Match.Where(x => x.Team1Id == t.Id && x.Team2Id == t2.Id).ToList())
@@ -437,7 +435,6 @@ namespace FootballCoachOnline.Controllers
                     Name = player.Name + " " + player.Surname
                 });
             }
-            var team = await _context.Team.SingleOrDefaultAsync(t => t.Id == teamId);
             ViewData["teamId"] = teamId;
 
             var vm = new PlayersMatchViewModel

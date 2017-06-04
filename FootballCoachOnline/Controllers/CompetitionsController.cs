@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FootballCoachOnline.Models;
-using Microsoft.AspNetCore.Authorization;
 using FootballCoachOnline.Data;
 using FootballCoachOnline.ViewModels;
 
@@ -76,10 +73,18 @@ namespace FootballCoachOnline.Controllers
                           .ToList();
             //matches = matches.Skip(matches.Count - 1).ToList();
 
+            var playerStats = _context.PlayerStats.Include(p => p.Player).Where(p => p.CompetitionId == id).ToList();
+            var scorers = playerStats.OrderByDescending(p => p.Goals).Take(5).ToList();
+            var yellows = playerStats.OrderByDescending(p => p.YellowCards).Take(5).ToList();
+            var reds = playerStats.OrderByDescending(p => p.RedCards).Take(5).ToList();
+
             CompetitionStatsMatchesViewModel vm = new CompetitionStatsMatchesViewModel
             {
                 Matches = matches,
-                Stats = cts
+                Stats = cts,
+                Scorers = scorers,
+                Yellows = yellows,
+                Reds = reds
             };
 
             return View(vm);

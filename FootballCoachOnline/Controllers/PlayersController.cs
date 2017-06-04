@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +47,7 @@ namespace FootballCoachOnline.Controllers
                 .Include(s => s.Competition)
                 .OrderBy(s => s.Competition.Name)
                 .ToList();
+            var tests = _context.Test.Where(t => t.PlayerId == id).ToList();
 
             if (player == null)
             {
@@ -56,7 +56,8 @@ namespace FootballCoachOnline.Controllers
             var vm = new PlayerProfileViewModel
             {
                 Player = player,
-                Stats = stats
+                Stats = stats,
+                Tests = tests
             };
 
             return View(vm);
@@ -67,7 +68,7 @@ namespace FootballCoachOnline.Controllers
         {
             var teams = _context.Team.Where(t => t.CoachId == _userManager.GetUserId(User));
 
-            ViewData["TeamId"] = new SelectList(_context.Team.Where(t => t.CoachId == _userManager.GetUserId(User)), "Id", "Name", TempData["TeamId"]);
+            ViewData["TeamId"] = new SelectList(teams, "Id", "Name", TempData["TeamId"]);
 
             var positions = from Player.Position p in Enum.GetValues(typeof(Player.Position))
                             select new { Id = (int)p, Name = p.ToString() };

@@ -1,15 +1,18 @@
-@model IEnumerable<FootballCoachOnline.Models.Test>
+@model IEnumerable<Test>
 
 @{
     ViewData["Title"] = "Index";
+    var id = ViewContext.RouteData.Values["id"];
 }
 
 <h2>Index</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-route-id="@id" class="btn btn-primary btn-sm">
+        <span class="glyphicon glyphicon-plus"></span> Dodaj novi test
+    </a>
 </p>
-<table class="table">
+<table class="table table-condensed">
     <thead>
         <tr>
                 <th>

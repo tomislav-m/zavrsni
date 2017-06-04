@@ -1,4 +1,4 @@
-@model FootballCoachOnline.Models.Match
+@model Match
 
 @{
     ViewData["Title"] = "Nova utakmica";
@@ -61,7 +61,7 @@
 </form>
 
 <div>
-    <a asp-controller="Competition" asp-action="Details" asp-route-id="@ViewBag.CompetitionId" class="btn btn-default">
+    <a asp-controller="Competitions" asp-action="Details" asp-route-id="@ViewBag.CompetitionId" class="btn btn-default">
         <span class="glyphicon glyphicon-backward"></span> Natrag na natjecanje
     </a>
 </div>

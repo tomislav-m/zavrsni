@@ -1,8 +1,5 @@
 ﻿using FootballCoachOnline.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FootballCoachOnline.ViewModels
 {
@@ -10,5 +7,6 @@ namespace FootballCoachOnline.ViewModels
     {
         public Player Player { get; set; }
         public List<PlayerStats> Stats { get; set; }
+        public List<Test> Tests { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 @model FootballCoachOnline.ViewModels.PlayerProfileViewModel
 
 @{
-    ViewData["Title"] = @Model.Player.FullName;
+    ViewData["Title"] = Model.Player.FullName;
 }
 
 <div id="tempmessage"></div>
@@ -128,6 +128,30 @@
                             <td>
                                 @Html.DisplayFor(model => item.RedCards)
                             </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <div class="details">
+                <a asp-controller="Tests" asp-action="Create" asp-route-id="@Model.Player.Id" class="pull-right">
+                    <span class="glyphicon glyphicon-plus-sign"></span> Novi test
+                </a>
+                <div class="title">Testovi</div>
+                <table class="table table-condensed headcenter">
+                    <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(modelItem => Model.Tests.First().Name)</th>
+                        <th>@Html.DisplayNameFor(modelItem => Model.Tests.First().Description)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.Tests)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
                         </tr>
                     }
                     </tbody>

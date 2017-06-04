@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,10 +18,22 @@ namespace FootballCoachOnline.Controllers
         }
 
         // GET: Tests
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
             var applicationDbContext = _context.Test.Include(t => t.Player);
-            return View(await applicationDbContext.ToListAsync());
+            if (id == null)
+            {
+                return View(await applicationDbContext.ToListAsync());
+            }
+            var tests = _context.PlayerTeam
+                .Where(t => t.TeamId == id)
+                .Include(p => p.Player)
+                .ThenInclude(t => t.Test)
+                .Select(p => p.Player)
+                .SelectMany(t => t.Test)
+                .ToList();
+            
+            return View(tests);
         }
 
         // GET: Tests/Details/5
@@ -46,9 +56,15 @@ namespace FootballCoachOnline.Controllers
         }
 
         // GET: Tests/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewData["PlayerId"] = new SelectList(_context.Player, "Id", "Name");
+            var player = _context.Player.SingleOrDefault(p => p.Id == id);
+            if (player == null)
+            {
+                return NotFound();
+            }
+            
+            ViewData["PlayerId"] = id;
             return View();
         }
 

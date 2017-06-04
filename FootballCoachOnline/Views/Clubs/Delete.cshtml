@@ -1,4 +1,4 @@
-@model FootballCoachOnline.Models.Club
+@model Club
 
 @{
     ViewData["Title"] = "Brisanje";
@@ -10,7 +10,6 @@
 <div>
     <hr />
     <dl class="dl-horizontal">
-        <input type="hidden" asp-for="Id" />
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -33,6 +32,7 @@
     
     <form asp-action="Delete">
         <div class="form-actions no-color">
+            <input type="hidden" asp-for="Id" />
             <input type="submit" value="Obriši" class="btn btn-default" /> |
             <a asp-action="Index">Natrag na listu</a>
         </div>

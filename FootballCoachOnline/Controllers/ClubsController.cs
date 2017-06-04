@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FootballCoachOnline.Models;
 using Microsoft.AspNetCore.Authorization;
 using FootballCoachOnline.Data;
-using System.Data.SqlClient;
 
 namespace FootballCoachOnline.Controllers
 {
@@ -67,7 +64,7 @@ namespace FootballCoachOnline.Controllers
                     _context.Add(club);
                     await _context.SaveChangesAsync();
 
-                    TempData[Constants.Message] = $"Klub {club.Name} uspješno dodan.";
+                    TempData[Constants.Message] = $"Klub {club.Name} uspjeï¿½no dodan.";
                     TempData[Constants.ErrorOccurred] = false;
 
                     return RedirectToAction("Index");
@@ -75,7 +72,7 @@ namespace FootballCoachOnline.Controllers
                 catch(Exception exc)
                 {
                     ModelState.AddModelError(string.Empty, exc.ToString());
-                    TempData[Constants.Message] = "Pogreška u dodavanju kluba";
+                    TempData[Constants.Message] = "Pogreï¿½ka u dodavanju kluba";
                     TempData[Constants.ErrorOccurred] = true;
                 }
             }
@@ -162,13 +159,13 @@ namespace FootballCoachOnline.Controllers
                 _context.Club.Remove(club);
                 await _context.SaveChangesAsync();
 
-                TempData[Constants.Message] = $"Klub {club.Name} uspješno obrisan.";
+                TempData[Constants.Message] = $"Klub {club.Name} uspjeï¿½no obrisan.";
                 TempData[Constants.ErrorOccurred] = false;
             }
             catch (DbUpdateException exc)
             {
                 ModelState.AddModelError(string.Empty, exc.ToString());
-                TempData[Constants.Message] = $"Klub {club.Name} ne može biti obrisan jer ima timove!";
+                TempData[Constants.Message] = $"Klub {club.Name} ne moï¿½e biti obrisan jer ima timove!";
                 TempData[Constants.ErrorOccurred] = true;
             }
 
