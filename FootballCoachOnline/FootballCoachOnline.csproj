@@ -1,28 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
-
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
-
   <PropertyGroup>
     <UserSecretsId>aspnet-FootballCoachOnline-8be41684-e744-404d-a7be-462047656e33</UserSecretsId>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>False</Optimize>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="wwwroot\ReleasedToday\**" />
     <Content Remove="wwwroot\ReleasedToday\**" />
     <EmbeddedResource Remove="wwwroot\ReleasedToday\**" />
     <None Remove="wwwroot\ReleasedToday\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="wwwroot\images\football.jpg" />
     <Content Include="wwwroot\images\football2.jpg" />

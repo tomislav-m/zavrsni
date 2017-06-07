@@ -5,7 +5,12 @@
     TempData["TeamId"] = Model.Team.Id;
 }
 
-<h2>@ViewData["Team"]</h2>
+<h2>
+    @ViewData["Team"]
+    <button id="tablePDF" class="btn btn-default" title="skini statistike u PDF-u">
+        <span class="glyphicon glyphicon-print"></span>
+    </button>
+</h2>
 
 <p>
     <div class="btn-group">
@@ -19,58 +24,87 @@
 </p>
 <div class="container-fluid">
     <div class="row">
-        <div class="smalltable col-xs-12 col-sm-12 col-md-7 col-lg-7">
+        <div class="smalltable col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <table class="table table-hover headcenter">
                 <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Players.FirstOrDefault().Name)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Players.FirstOrDefault().DateOfBirth)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Players.FirstOrDefault().NaturalPosition)
-                        </th>
-                        <th></th>
-                    </tr>
+                <tr>
+                    <th>
+                        Ime
+                    </th>
+                    <th>
+                        Datum rođenja
+                    </th>
+                    <th>
+                        Pozicija
+                    </th>
+                    <th>Nastupi</th>
+                    <th>Golovi</th>
+                    <th>Žuti</th>
+                    <th>Crveni</th>
+                    <th></th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Players)
-                    {
-                        <tr>
-                            <td class="playerlink">
-                                <a asp-controller="Players" asp-action="Details" asp-route-id="@item.Id" asp-route-teamId="@Model.Team.Id" title="Detalji">
-                                    @Html.DisplayFor(modelItem => item.Name) @Html.DisplayFor(modelItem => item.Surname)
-                                </a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateOfBirth)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.NaturalPosition)
-                            </td>
-                            <td>
-                                <form asp-controller="Players" asp-action="Delete" method="post">
-                                    <div class="btn-group">
-                                        <a title="Uredi" class="btn btn-warning btn-xs" asp-controller="Players" asp-action="Edit" asp-route-id="@item.Id">
-                                            <span class="glyphicon glyphicon-edit"></span>
-                                        </a>
-                                        <input type="hidden" name="id" value="@item.Id" />
-                                        <button class="btn btn-danger btn-xs del" type="submit" title="obriši">
-                                            <span class="glyphicon glyphicon-remove"></span>
-                                        </button>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
-                    }
+                @foreach (var item in Model.PlayerStats)
+                {
+                    <tr>
+                        <td class="playerlink">
+                            <a asp-controller="Players" asp-action="Details" asp-route-id="@item.Key" asp-route-teamId="@Model.Team.Id" title="Detalji">
+                                @Html.DisplayFor(modelItem => item.Value.Player.FullName)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.Player.DateOfBirth)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.Player.NaturalPosition)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.Apps)
+                            <span>(@Html.DisplayFor(modelItem => item.Value.Subs))</span>
+                        </td>
+                        <td>
+                            @if (item.Value.Player.NaturalPosition == Player.Position.golman)
+                            {
+                                <span>
+                                    @Html.DisplayFor(modelItem => item.Value.GoalsConceded)
+                                    (@Html.DisplayFor(modelItem => item.Value.Goals))
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @Html.DisplayFor(modelItem => item.Value.Goals)
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.YellowCards)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.RedCards)
+                        </td>
+                        <td>
+                            <form asp-controller="Players" asp-action="Delete" method="post">
+                                <div class="btn-group">
+                                    <a title="Uredi" class="btn btn-warning btn-xs" asp-controller="Players" asp-action="Edit" asp-route-id="@item.Value.Player.Id">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </a>
+                                    <input type="hidden" name="id" value="@item.Value.Player.Id" />
+                                    <button class="btn btn-danger btn-xs del" type="submit" title="obriši">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
-
-        <br />
-        <div class="smalltable col-xs-12 col-sm-12 col-md-5 col-lg-5">
+    </div>
+    <div class="row">
+        <div class="smalltable col-xs-12 col-sm-12 col-md-7 col-lg-7">
             <div class="smalltable details">
                 <div>
                     <a asp-controller="Matches" asp-action="Index" asp-route-id="@Model.Team.Id" class="pull-right">
@@ -80,57 +114,58 @@
                 </div>
                 <table class="table table-hover table-responsive">
                     <tbody class="text-center">
-                        @foreach (var item in Model.Matches)
-                        {
-                            <tr class="@(item.Played ? "gray" : "")">
-                                @if (item.Team1Id == Model.Team.Id)
-                                {
-                                    <td title="doma">D</td>
-                                    <td class="playerlink">
-                                        <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
-                                            @Html.DisplayFor(model => item.Team2.ShortName)
-                                        </a>
-                                    </td>
-                                    if (item.Played)
-                                    {
-                                        <td>
-                                            @item.MatchScore.Score1 : @item.MatchScore.Score2
-                                        </td>
-                                    }
-                                }
-                                else
-                                {
-                                    <td title="u gostima">G</td>
-                                    <td class="playerlink">
-                                        <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
-                                            @Html.DisplayFor(model => item.Team1.ShortName)
-                                        </a>
-                                    </td>
-                                    if (item.Played)
-                                    {
-                                        <td>
-                                            @item.MatchScore.Score2 : @item.MatchScore.Score1
-                                        </td>
-                                    }
-                                }
-                                @if (!item.Played)
-                                {
-                                    <td>: - :</td>
-                                }
-                                <td title="Natjecanje" class="playerlink">
-                                    <a asp-controller="Competitions" asp-action="Details" asp-route-id="@item.CompetitionId">
-                                        @item.Competition.ShortName
+                    @foreach (var item in Model.Matches)
+                    {
+                        <tr class="@(item.Played ? "gray" : "")">
+                            @if (item.Team1Id == Model.Team.Id)
+                            {
+                                <td title="doma">D</td>
+                                <td class="playerlink">
+                                    <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
+                                        @Html.DisplayFor(model => item.Team2.ShortName)
                                     </a>
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(model => item.Date)
+                                if (item.Played)
+                                {
+                                    <td>
+                                        @item.MatchScore.Score1 : @item.MatchScore.Score2
+                                    </td>
+                                }
+                            }
+                            else
+                            {
+                                <td title="u gostima">G</td>
+                                <td class="playerlink">
+                                    <a asp-controller="Matches" asp-action="Details" asp-route-id="@item.Id" title="Detalji">
+                                        @Html.DisplayFor(model => item.Team1.ShortName)
+                                    </a>
                                 </td>
-                            </tr>
-                        }
+                                if (item.Played)
+                                {
+                                    <td>
+                                        @item.MatchScore.Score2 : @item.MatchScore.Score1
+                                    </td>
+                                }
+                            }
+                            @if (!item.Played)
+                            {
+                                <td>: - :</td>
+                            }
+                            <td title="Natjecanje" class="playerlink">
+                                <a asp-controller="Competitions" asp-action="Details" asp-route-id="@item.CompetitionId">
+                                    @item.Competition.ShortName
+                                </a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Date)
+                            </td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
-            <br />
+        </div>
+        <div class="smalltable col-xs-12 col-sm-12 col-md-5 col-lg-5">
             <div class="smalltable details">
                 <div>
                     <a asp-controller="Trainings" asp-action="Index" asp-route-id="@Model.Team.Id" class="pull-right">
@@ -143,17 +178,17 @@
                 </div>
                 <table class="table table-hover table-responsive">
                     <tbody>
-                        @foreach (var item in Model.Trainings)
-                        {
-                            <tr class="@(item.Date.Date > DateTime.Now.Date ? "gray" : "")">
-                                <td>@Html.DisplayFor(modelItem => item.Date)</td>
-                                <td>
-                                    <a asp-controller="Trainings" asp-action="Details" asp-route-id="@item.Id" class="btn btn-xs btn-info" title="Detalji">
-                                        <span class="glyphicon glyphicon-info-sign"></span>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
+                    @foreach (var item in Model.Trainings)
+                    {
+                        <tr class="@(item.Date.Date > DateTime.Now.Date ? "gray" : "")">
+                            <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                            <td>
+                                <a asp-controller="Trainings" asp-action="Details" asp-route-id="@item.Id" class="btn btn-xs btn-info" title="Detalji">
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
@@ -168,6 +203,68 @@
                 if (!confirm("Jeste li sigurni?")) {
                     return false;
                 }
+            });
+        });
+    </script>
+    
+    <script>
+        $('#tablePDF').click(function() {
+            $.get('@Url.Action("GetTable", "Teams", new {id = ViewBag.TeamId})', function(externalData) {
+            
+                var externalDataRetrievedFromServer = externalData;
+        
+                function buildTableBody(data, columns) {
+                    var body = [];
+    
+                    //header
+                    body.push([
+                        {text: 'Ime', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Nastupa', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Zamjena', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Zabijeno', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Primljeno', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Žuti', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Crveni', style: 'header', alignment: 'center', fillColor: '#f4f4f4' }
+                    ]);
+   
+                    data.forEach(function(row) {
+                        var dataRow = [];
+    
+                        columns.forEach(function(column) {
+                            dataRow.push(row[column].toString());
+                        });
+    
+                        body.push(dataRow);
+                    });
+    
+                    return body;
+                };
+    
+                function table(data, columns) {
+                    return {
+                        'alignment': 'center',
+                        table: {
+                            headerRows: 1,
+                            body: buildTableBody(data, columns)
+                        }
+                    };
+                };
+
+                var title = "@Html.Raw(ViewBag.Team), " + $.datepicker.formatDate('dd.mm.yy.', new Date()).toString();
+                var docDefinition = {
+                    content: [
+                        { text: title, style: 'header' },
+                        table(externalDataRetrievedFromServer, ['ime','utakmice', 'zamjene', 'golovi', 'primljeni', 'žuti', 'crveni'])
+                    ],
+                    styles: {
+                        header: {
+                            bold: true
+                        }
+                    }
+                };
+            
+                var pdf = pdfMake.createPdf(docDefinition);
+                pdf.download('tablica.pdf');
             });
         });
     </script>

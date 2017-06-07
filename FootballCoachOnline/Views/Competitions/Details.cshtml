@@ -279,7 +279,7 @@
                     };
                 };
 
-                var title = "@Html.Raw(ViewBag.CompetitionName), " + $.datepicker.formatDate('dd.mm.yy', new Date()).toString();
+                var title = "@Html.Raw(ViewBag.CompetitionName), " + $.datepicker.formatDate('dd.mm.yy.', new Date()).toString();
                 var docDefinition = {
                     content: [
                         { text: title, style: 'header' },

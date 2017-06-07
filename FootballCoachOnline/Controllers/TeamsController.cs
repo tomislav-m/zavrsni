@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -56,10 +57,43 @@ namespace FootballCoachOnline.Controllers
                              .Include(m => m.MatchTeam2)
                              .ThenInclude(m => m.Competition)
                              .SingleOrDefaultAsync(m => m.Id == id);
-
+            
             if (team == null)
             {
                 return NotFound();
+            }
+
+            var allStats = _context.PlayerStats
+                .Where(s => s.TeamId == id)
+                .Include(p => p.Player)
+                .OrderBy(s => s.Player.NaturalPosition)
+                .ToList();
+            var playerStats = new Dictionary<int, PlayerStats>();
+            foreach (var s in allStats)
+            {
+                if (playerStats.ContainsKey(s.PlayerId))
+                {
+                    playerStats[s.PlayerId].Apps += s.Apps;
+                    playerStats[s.PlayerId].Subs += s.Subs;
+                    playerStats[s.PlayerId].Goals += s.Goals;
+                    playerStats[s.PlayerId].GoalsConceded += s.GoalsConceded;
+                    playerStats[s.PlayerId].RedCards += s.RedCards;
+                    playerStats[s.PlayerId].YellowCards += s.YellowCards;
+                }
+                else
+                {
+                    var stats = new PlayerStats
+                    {
+                        Player = s.Player,
+                        Apps = s.Apps,
+                        Goals = s.Goals,
+                        GoalsConceded = s.GoalsConceded,
+                        RedCards = s.RedCards,
+                        Subs = s.Subs,
+                        YellowCards = s.YellowCards
+                    };
+                    playerStats.Add(s.PlayerId, stats);
+                }
             }
 
             if (!(await Authorize(team)))
@@ -75,12 +109,6 @@ namespace FootballCoachOnline.Controllers
             matches.AddRange(matchesF);
             matches.AddRange(matchesP);
 
-            var players = _context.PlayerTeam.Where(t => t.TeamId == id)
-                          .Select(p => p.Player)
-                          .OrderBy(p => p.NaturalPosition)
-                          .ThenBy(p => p.Surname)
-                          .ToList();
-
             var trainings = _context.Training.Where(t => t.TeamId == id)
                             .OrderByDescending(t => t.Date)
                             .Take(5)
@@ -89,12 +117,13 @@ namespace FootballCoachOnline.Controllers
             var vm = new PlayersMatchesViewModel
             {
                 Matches = matches.OrderBy(m => m.Date).ToList(),
-                Players = players,
+                PlayerStats = playerStats,
                 Team = team,
                 Trainings = trainings
             };
 
             ViewData["Team"] = team.Name;
+            ViewData["TeamId"] = team.Id;
 
             return View(vm);
         }
@@ -410,6 +439,68 @@ namespace FootballCoachOnline.Controllers
             }
 
             return (team.CoachId != null && (team.CoachId == _userManager.GetUserId(User)));
+        }
+        
+        public IActionResult GetTable(int id)
+        {
+            var team = _context.Team.SingleOrDefault(c => c.Id == id);
+            if (team == null)
+            {
+                return NotFound();
+            }
+            
+            var allStats = _context.PlayerStats
+                .Where(s => s.TeamId == id)
+                .Include(p => p.Player)
+                .OrderBy(s => s.Player.NaturalPosition)
+                .ToList();
+            var playerStats = new Dictionary<int, PlayerStats>();
+            foreach (var s in allStats)
+            {
+                if (playerStats.ContainsKey(s.PlayerId))
+                {
+                    playerStats[s.PlayerId].Apps += s.Apps;
+                    playerStats[s.PlayerId].Subs += s.Subs;
+                    playerStats[s.PlayerId].Goals += s.Goals;
+                    playerStats[s.PlayerId].GoalsConceded += s.GoalsConceded;
+                    playerStats[s.PlayerId].RedCards += s.RedCards;
+                    playerStats[s.PlayerId].YellowCards += s.YellowCards;
+                }
+                else
+                {
+                    var stats = new PlayerStats
+                    {
+                        Player = s.Player,
+                        Apps = s.Apps,
+                        Goals = s.Goals,
+                        GoalsConceded = s.GoalsConceded,
+                        RedCards = s.RedCards,
+                        Subs = s.Subs,
+                        YellowCards = s.YellowCards
+                    };
+                    playerStats.Add(s.PlayerId, stats);
+                }
+            }
+            
+            List<object> list = new List<object>();
+
+            int i = 1;
+            foreach(var item in playerStats.Values)
+            {
+                var result = new
+                {
+                    ime = item.Player.FullName,
+                    utakmice = item.Apps,
+                    zamjene = item.Subs,
+                    golovi = item.Goals,
+                    primljeni = item.GoalsConceded,
+                    žuti = item.YellowCards,
+                    crveni = item.RedCards
+                };
+                list.Add(result);
+            }
+
+            return Json(list);
         }
     }
 }

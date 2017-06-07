@@ -49,7 +49,7 @@
                 @Html.DisplayNameFor(model => model.Date)
             </dt>
             <dd>
-                @Model.Date
+                @Html.DisplayFor(model => model.Date)
             </dd>
         </dl>
         <div class="col-md-offset-2 col-md-7">
@@ -89,7 +89,7 @@
     <div class="col-md-7">
     @if(Model.MatchStats.Any())
     {
-        <table class="table">
+        <table class="table table-condensed" style="table-layout: fixed">
             <thead>
                 <tr>
                     <th>Prvi sastav</th>
@@ -107,7 +107,7 @@
                         <form asp-action="RemovePlayer">
                             <input hidden name="playerId" value="@item.PlayerId" />
                             <input hidden name="matchId" value="@Model.Id" />
-                            <button type="submit" class="btn-xs btn-danger del">
+                            <button type="submit" class="btn btn-xs btn-danger del">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </button>
                         </form>
@@ -116,10 +116,11 @@
             }
             </tbody>
         </table>
-        <table>
+        <table class="table table-condensed" style="table-layout: fixed">
             <thead>
                 <tr>
                     <th>Zamjene</th>
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -129,6 +130,15 @@
                 <tr>
                     <td>@item.Player.FullName</td>
                     <td>@item.Player.NaturalPosition</td>
+                    <td>
+                        <form asp-action="RemovePlayer">
+                            <input hidden name="playerId" value="@item.PlayerId" />
+                            <input hidden name="matchId" value="@Model.Id" />
+                            <button type="submit" class="btn btn-xs btn-danger del">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </form>
+                    </td>
                 </tr>
             }
             </tbody>
@@ -136,9 +146,13 @@
     }
     </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="btn-group">
+    <a asp-action="Index" class="btn btn-default">
+        <span class="glyphicon glyphicon-backward"></span> Natrag
+    </a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-default">
+        <span class="glyphicon glyphicon-edit"></span> Uredi
+    </a>
 </div>
 
 @section Scripts{
