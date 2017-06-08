@@ -200,4 +200,66 @@
             window.location = location;
         });
     </script>
+    
+    <script>
+        $('#tablePDF').click(function() {
+            $.get('@Url.Action("GetTable", "Players", new {id = Model.Player.Id})', function(externalData) {
+            
+                var externalDataRetrievedFromServer = externalData;
+        
+                function buildTableBody(data, columns) {
+                    var body = [];
+    
+                    //header
+                    body.push([
+                        {text: 'Natjecanje', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Nastupa', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Zamjena', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Zabijeno', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Primljeno', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Žuti', style: 'header', alignment: 'center', fillColor: '#f4f4f4'},
+                        {text: 'Crveni', style: 'header', alignment: 'center', fillColor: '#f4f4f4' }
+                    ]);
+   
+                    data.forEach(function(row) {
+                        var dataRow = [];
+    
+                        columns.forEach(function(column) {
+                            dataRow.push(row[column].toString());
+                        });
+    
+                        body.push(dataRow);
+                    });
+    
+                    return body;
+                };
+    
+                function table(data, columns) {
+                    return {
+                        'alignment': 'center',
+                        table: {
+                            headerRows: 1,
+                            body: buildTableBody(data, columns)
+                        }
+                    };
+                };
+
+                var title = "@Html.Raw(Model.Player.FullName), " + $.datepicker.formatDate('dd.mm.yy.', new Date()).toString();
+                var docDefinition = {
+                    content: [
+                        { text: title, style: 'header' },
+                        table(externalDataRetrievedFromServer, ['ime','utakmice', 'zamjene', 'golovi', 'primljeni', 'žuti', 'crveni'])
+                    ],
+                    styles: {
+                        header: {
+                            bold: true
+                        }
+                    }
+                };
+            
+                var pdf = pdfMake.createPdf(docDefinition);
+                pdf.download('statistika-@(Model.Player.FullName).pdf');
+            });
+        });
+    </script>
 }

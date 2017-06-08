@@ -277,5 +277,46 @@ namespace FootballCoachOnline.Controllers
         {
             return _context.Player.Any(e => e.Id == id);
         }
+        
+        public IActionResult GetTable(int id, int? year)
+        {
+            var player = _context.Player.SingleOrDefault(c => c.Id == id);
+            if (player == null)
+            {
+                return NotFound();
+            }
+
+            if (year == null)
+            {
+                year = DateTime.Now.Year;
+            }
+            
+            var stats = _context.PlayerStats
+                .Where(s => s.PlayerId == id && s.Year.Year == year)
+                .Include(s => s.Team)
+                .Include(s => s.Competition)
+                .OrderBy(s => s.Competition.Name)
+                .ToList();
+            
+            List<object> list = new List<object>();
+
+            int i = 1;
+            foreach(var item in stats)
+            {
+                var result = new
+                {
+                    ime = item.Competition.Name,
+                    utakmice = item.Apps,
+                    zamjene = item.Subs,
+                    golovi = item.Goals,
+                    primljeni = item.GoalsConceded,
+                    žuti = item.YellowCards,
+                    crveni = item.RedCards
+                };
+                list.Add(result);
+            }
+
+            return Json(list);
+        }
     }
 }
